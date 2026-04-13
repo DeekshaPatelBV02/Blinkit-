@@ -1,0 +1,29 @@
+.orders-container {
+  padding: 20px;
+}
+
+.order-card {
+  background: white;
+  margin: 15px 0;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.order-product {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.order-product img {
+  width: 60px;
+}
+
+.status {
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.status.pending { color: orange; }
+.status.delivered { color: green; }
+.status.cancelled { color: red; }

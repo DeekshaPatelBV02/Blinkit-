@@ -1,0 +1,123 @@
+
+        *{
+    margin: 0;
+    font-family: Arial;
+    box-sizing:boder-box;
+    padding:0;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 10px 20px;
+  width: 100%;
+  background-color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  border-bottom: 0.5px solid #e0e0e0;
+}
+
+
+.nav-logo{
+    height: 60px;
+    width:100px;
+  
+    
+
+}
+
+.logo {
+  background-image: url("../assets/blinkit logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 150px;
+  height: 90px;
+  
+}
+
+.nav-address{
+    
+    margin: 10px;
+    margin-left:150px;
+    
+    
+
+}
+.ava{
+    font-size: 18px;
+    font-weight: bold;
+  
+}
+.ava1{
+    font-size:13px;
+}
+.nav-search{
+    display: flex;
+    align-items: center;
+    background-color: #f8f8f8;
+    border: 1px solid #eee;
+    padding:10px 15px;
+    flex-grow: 1;
+    max-width: 500px;
+    border-radius:8px ;
+    margin-left: 100px;
+    height: 50px;
+    
+    
+}
+.nav-search i{
+    display: flex;
+    width: 86px;
+    color:#888;
+    align-items: center;
+    justify-content: center;
+}
+.search-icon{
+    width:45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.nav-search input{
+    border:none;
+    outline:none;
+    background:none;
+    width:100%;
+    font-size:15px;
+}
+.nav-cart i{
+    font-size:30px;
+    padding-top:2px;
+}
+.nav-cart{
+    font-size: 0.rem;
+    background-color: #d2d0d0a0;
+    color:white ;
+    border-radius: 4px;
+    padding:6px 20px;
+    margin-left: 100px;
+    
+    
+    
+}
+.nav-login{
+    margin-left: 40px;
+    font-style: normal;
+    font-size:18px;
+    margin-left: 100px;
+}
+*{
+  font-family: arial;
+  
+}
+.top-section{
+    background-image:url("../assets/stock-blinkit.webp") ;
+    height: 300px;
+    width: 300px;
+    background-size:cover;
+    max-width: 100%;
+    
+}
