@@ -29,7 +29,7 @@ function Homephar() {
         <div className="hero-section">
 
           <img
-            src={`https://blinkit-3-qi0k.onrender.com/Images/${images[0].image}`}
+            src={`https://blinkit-3-qi0k.onrender.com/images/${images[0].image}`}
             alt="banner"
             onClick={() => navigate("/products")}
           />
@@ -47,7 +47,7 @@ function Homephar() {
           <div className="service-card" key={index}>
 
             <img
-              src={`https://blinkit-3-qi0k.onrender.com/Images/${item.image}`}
+              src={`https://blinkit-3-qi0k.onrender.com/images/${item.image}`}
               alt="service"
               onClick={() => navigate("/products")}
             />

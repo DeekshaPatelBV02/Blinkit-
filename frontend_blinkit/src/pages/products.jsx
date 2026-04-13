@@ -27,7 +27,7 @@ function Products() {
         <div className="category-card" key={cat._id}>
 
           <img
-            src={`https://blinkit-3-qi0k.onrender.com/Images/${cat.image}`}
+            src={`https://blinkit-3-qi0k.onrender.com/images/${cat.image}`}
             alt={cat.name}
             onClick={() => navigate(`/products/${cat.name}`)}
           />

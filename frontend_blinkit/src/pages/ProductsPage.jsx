@@ -27,7 +27,7 @@ function ProductsPage(){
             <div className="product">
                 {Products.map((p)=>
                 <div className="single-product" key={p._id}>
-                    <img src={`https://blinkit-3-qi0k.onrender.com/Images/${p.file}`}
+                    <img src={`https://blinkit-3-qi0k.onrender.com/images/${p.file}`}
                     alt={p.name}
                     onClick={()=>navigate(`/product/${p._id}`)}/>
                     <p className="product-name">{p.name}</p>

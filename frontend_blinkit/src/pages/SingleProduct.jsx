@@ -34,7 +34,7 @@ function SingleProduct() {
     <div className="single-product-page">
       <div className="single-image">
         <img
-          src={`https://blinkit-3-qi0k.onrender.com/Images/${product.file}`}
+          src={`https://blinkit-3-qi0k.onrender.com/images/${product.file}`}
           alt={product.name}
         />
       </div>
