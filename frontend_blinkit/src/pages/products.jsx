@@ -4,42 +4,36 @@ import { useNavigate } from "react-router-dom";
 import "../styles/products.css";
 
 function Products() {
-
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-
-    axios.get("https://blinkit-3-qi0k.onrender.com/getCategories")
+    axios
+      .get("https://blinkit-3-qi0k.onrender.com/getCategories")
       .then((res) => {
+        console.log("Categories API response:", res.data);
         setCategories(res.data);
       })
       .catch((err) => console.log(err));
-
   }, []);
 
   return (
-
     <div className="grid">
-
-      {categories.map((cat) => (
-
-        <div className="category-card" key={cat._id}>
-
-          <img
-            src={`https://blinkit-3-qi0k.onrender.com/images/${cat.image}`}
-            alt={cat.name}
-            onClick={() => navigate(`/products/${cat.name}`)}
-          />
-
-        </div>
-
-      ))}
-
+      {categories.length === 0 ? (
+        <h2>No Categories Found</h2>
+      ) : (
+        categories.map((cat) => (
+          <div className="category-card" key={cat._id}>
+            <img
+              src={`https://blinkit-3-qi0k.onrender.com/images/${cat.image}`}
+              alt={cat.name}
+              onClick={() => navigate(`/products/${cat.name}`)}
+            />
+          </div>
+        ))
+      )}
     </div>
-
   );
-
 }
 
 export default Products;
