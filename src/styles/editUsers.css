@@ -1,0 +1,43 @@
+.edit-user-container {
+  width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+  border: 2px solid rgb(166,166,166);
+  text-align: center;
+}
+
+.edit-user-title {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.edit-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+
+
+.edit-user-form input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 100%;
+}
+
+.update-user-btn {
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.update-user-btn:hover {
+  background-color: #218838;
+}

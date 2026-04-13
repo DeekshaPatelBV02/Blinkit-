@@ -1,0 +1,55 @@
+
+.CartContainer {
+  padding: 20px;
+  background-color: #f7f7f7;
+}
+
+
+.CartRow {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+
+.col-8 {
+  width: 70%;
+}
+
+
+.col-4 {
+  width: 30%;
+}
+
+
+.secondary {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px solid #eee;
+  
+}
+
+
+.secondary h5 {
+  font-size: 14px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+}
+
+
+.cart-button-warning {
+  width: 100%;
+  padding: 12px;
+  background-color: #0c831f;
+  color: #fff;
+  border: none;
+  margin-top: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+}
+

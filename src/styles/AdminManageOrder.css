@@ -1,0 +1,55 @@
+.admin-orders {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.admin-orders h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+
+.admin-orders table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+}
+
+
+.admin-orders th {
+  background-color: #1b9a3f;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+
+.admin-orders td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+
+.admin-orders tr:hover {
+  background-color: #f5f5f5;
+}
+
+
+.admin-orders button {
+  padding: 5px 10px;
+  margin: 3px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+
+.admin-orders button{
+  background-color: red;
+  color: white;
+}
+
+
+
+
