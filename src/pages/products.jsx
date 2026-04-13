@@ -10,7 +10,7 @@ function Products() {
 
   useEffect(() => {
 
-    axios.get("http://localhost:3001/getCategories")
+    axios.get("https://blinkit-2-yemv.onrender.com/getCategories")
       .then((res) => {
         setCategories(res.data);
       })
@@ -27,7 +27,7 @@ function Products() {
         <div className="category-card" key={cat._id}>
 
           <img
-            src={`http://localhost:3001/Images/${cat.image}`}
+            src={`https://blinkit-2-yemv.onrender.com/Images/${cat.image}`}
             alt={cat.name}
             onClick={() => navigate(`/products/${cat.name}`)}
           />

@@ -7,7 +7,7 @@ function Orders() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/orders")
+    axios.get("https://blinkit-2-yemv.onrender.com/orders")
       .then(res => setOrders(res.data))
       .catch(err => console.log(err));
   }, []);
@@ -33,7 +33,7 @@ function Orders() {
             {order.products.map((p, i) => (
               <div key={i} className="order-product">
                 <img
-                  src={`http://localhost:3001/images/${p.file}`}
+                  src={`https://blinkit-2-yemv.onrender.com/images/${p.file}`}
                   alt={p.name}
                 />
                 <p>{p.name}</p>

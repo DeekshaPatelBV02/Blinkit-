@@ -17,7 +17,7 @@ function SingleProduct() {
 
   const getProduct = async () => {
     try {
-      const res = await axios.get(`http://localhost:3001/products/${id}`);
+      const res = await axios.get(`https://blinkit-2-yemv.onrender.com/products/${id}`);
       console.log(res.data); 
       setProduct(res.data);
     } catch (error) {
@@ -34,7 +34,7 @@ function SingleProduct() {
     <div className="single-product-page">
       <div className="single-image">
         <img
-          src={`http://localhost:3001/Images/${product.file}`}
+          src={`https://blinkit-2-yemv.onrender.com/Images/${product.file}`}
           alt={product.name}
         />
       </div>

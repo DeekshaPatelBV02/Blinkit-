@@ -37,7 +37,7 @@ function Checkout() {
     const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
     if (!res) return alert("Razorpay failed");
 
-    const { data } = await axios.post("http://localhost:3001/orders", {
+    const { data } = await axios.post("https://blinkit-2-yemv.onrender.com/orders", {
       amount: totalPrice(cart) * 100,
       currency: "INR",
     });
@@ -50,7 +50,7 @@ function Checkout() {
 
       handler: async (response) => {
         const verify = await axios.post(
-          "http://localhost:3001/verify-payment",
+          "https://blinkit-2-yemv.onrender.com/verify-payment",
           response
         );
 
@@ -80,7 +80,7 @@ function Checkout() {
       paymentId,
     };
 
-    await axios.post("http://localhost:3001/orders/add", orderData);
+    await axios.post("https://blinkit-2-yemv.onrender.com/orders/add", orderData);
 
     alert("Order Placed ");
 

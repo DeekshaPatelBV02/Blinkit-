@@ -20,7 +20,7 @@ function EditUsers(){
 
     const getUser=async()=>{
         try{
-            const res = await axios.get(`http://localhost:3001/users/${id}`);
+            const res = await axios.get(`https://blinkit-2-yemv.onrender.com/users/${id}`);
             setUser(res.data);
         }catch(error){
             console.log(error);
@@ -34,7 +34,7 @@ function EditUsers(){
     const handleUpdate=async(e)=>{
         e.preventDefault();
         try{
-            await axios.put(`http://localhost:3001/users/${id}`,user);
+            await axios.put(`https://blinkit-2-yemv.onrender.com/users/${id}`,user);
             alert("user updated successfully");
             navigate("/admin/manage-users");
         }catch(err){

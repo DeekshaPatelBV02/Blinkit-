@@ -23,7 +23,7 @@ const ContextProvider = ({ children }) => {
 
   
   useEffect(() => {
-  axios.get("http://localhost:3001/getCart")
+  axios.get("https://blinkit-2-yemv.onrender.com/getCart")
     .then(res => {
       if (res.data && Array.isArray(res.data.product)) {
 
@@ -45,7 +45,7 @@ const ContextProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify(cart));
 
    
-    axios.post("http://localhost:3001/addCart", {
+    axios.post("https://blinkit-2-yemv.onrender.com/addCart", {
       cart
     });
 

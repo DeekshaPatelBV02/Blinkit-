@@ -30,7 +30,7 @@ function Sign() {
     const finalOtp = otp.join("");
 
     try {
-      const res = await axios.post("http://localhost:3001/verifyOtp", {
+      const res = await axios.post("https://blinkit-2-yemv.onrender.com/verifyOtp", {
         mobile,
         otp: finalOtp,
       });
@@ -73,7 +73,7 @@ function Sign() {
 
       {/* Resend */}
       <p className="resendcode" onClick={async () => {
-        await axios.post("http://localhost:3001/sendOtp", { mobile });
+        await axios.post("https://blinkit-2-yemv.onrender.com/sendOtp", { mobile });
         alert("OTP Resent");
       }}>
         Resend code

@@ -20,7 +20,7 @@ function AddUsers() {
     }
 
     try {
-      const res = await axios.post("http://localhost:3001/register", {name,phone,email,password});
+      const res = await axios.post("https://blinkit-2-yemv.onrender.com/register", {name,phone,email,password});
 
 localStorage.setItem("user", JSON.stringify(res.data));
       alert("User Registered Successfully ");

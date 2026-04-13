@@ -14,7 +14,7 @@ function ViewProducts() {
 
   const getProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/products");
+      const res = await axios.get("https://blinkit-2-yemv.onrender.com/products");
       setProducts(res.data);
     } catch (err) {
       console.log(err);
@@ -40,7 +40,7 @@ function ViewProducts() {
         {products.map((product) => (
           <div key={product._id} className="product-card">
             <img
-              src={`http://localhost:3001/images/${product.file}`}
+              src={`https://blinkit-2-yemv.onrender.com/images/${product.file}`}
               alt={product.name}
               className="product-image"/>
             <h4>{product.name}</h4>

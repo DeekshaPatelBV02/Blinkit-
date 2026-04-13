@@ -20,7 +20,7 @@ const CartProduct = ({ product }) => {
       <div className='contain'>
         <div className="CartProduct">
             <img
-                src={`http://localhost:3001/images/${product.file}`}
+                src={`https://blinkit-2-yemv.onrender.com/${product.file}`}
                 alt={product.name}
             />
             <div className="detail">

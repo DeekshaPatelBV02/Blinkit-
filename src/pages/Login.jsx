@@ -11,7 +11,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3001/sendOtp", { mobile });
+      await axios.post("https://blinkit-2-yemv.onrender.com/sendOtp", { mobile });
     } catch (err) {
       console.log("API Error:", err);
     }

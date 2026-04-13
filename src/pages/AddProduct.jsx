@@ -30,7 +30,7 @@ function AddProduct() {
 
     try {
 
-      await axios.post("http://localhost:3001/upload", formData);
+      await axios.post("https://blinkit-2-yemv.onrender.com/upload", formData);
 
       alert("Product Added Successfully");
 
