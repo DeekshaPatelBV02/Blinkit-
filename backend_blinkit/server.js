@@ -26,11 +26,13 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://blinkit-1tnsb92ku-deekshapatelbv02s-projects.vercel.app"
+    "https://blinkit-1tnsb92ku-deekshapatelbv02s-projects.vercel.app",
+    "https://blinkit-two-pink.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
+
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "public/Images")));
 
