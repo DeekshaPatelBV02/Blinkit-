@@ -7,18 +7,22 @@ function Login() {
   const navigate = useNavigate();
   const [mobile, setMobile] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      await axios.post("https://blinkit-2-yemv.onrender.com/sendOtp", { mobile });
-    } catch (err) {
-      console.log("API Error:", err);
-    }
+  try {
+    await axios.post(
+      "https://blinkit-2-yemv.onrender.com/sendOtp",
+      { mobile }
+    );
 
+    // ✅ move navigate INSIDE try
     navigate("/sign", { state: { mobile } });
-  };
 
+  } catch (err) {
+    console.log("API Error:", err);
+  }
+};
   return (
     <form onSubmit={handleSubmit}>
       <div className="overlay">
