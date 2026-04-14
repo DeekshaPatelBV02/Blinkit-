@@ -31,16 +31,13 @@ exports.sendOtp = async (req, res) => {
 
     console.log("Generated OTP:", otp);
 
-    // send OTP mail to your own email for testing
-    try {
-      await sendMail(
-        process.env.EMAIL_USER,
-        "Your Blinkit OTP",
-        `<h2>Your OTP is: ${otp}</h2><p>Valid for 5 minutes</p>`
-      );
-    } catch (mailError) {
+    sendMail(
+      process.env.EMAIL_USER,
+      "Your Blinkit OTP",
+      `<h2>Your OTP is: ${otp}</h2><p>Valid for 5 minutes</p>`
+    ).catch((mailError) => {
       console.log("MAIL ERROR:", mailError);
-    }
+    });
 
     return res.status(200).json({
       success: true,
