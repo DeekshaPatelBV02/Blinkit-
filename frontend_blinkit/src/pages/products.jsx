@@ -5,17 +5,35 @@ import "../styles/products.css";
 
 function Products() {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("https://blinkit-3-qi0k.onrender.com/getCategories")
-      .then((res) => {
+    const getCategories = async () => {
+      try {
+        const res = await axios.get("https://blinkit-3-qi0k.onrender.com/getCategories");
         console.log("Categories API response:", res.data);
-        setCategories(res.data);
-      })
-      .catch((err) => console.log(err));
+
+        if (Array.isArray(res.data)) {
+          setCategories(res.data);
+        } else {
+          console.log("Unexpected response:", res.data);
+          setError("Invalid categories response");
+        }
+      } catch (err) {
+        console.log("Categories fetch error:", err);
+        setError("Failed to load categories");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getCategories();
   }, []);
+
+  if (loading) return <h2>Loading categories...</h2>;
+  if (error) return <h2>{error}</h2>;
 
   return (
     <div className="grid">
