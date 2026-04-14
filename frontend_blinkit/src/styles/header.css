@@ -88,7 +88,7 @@
 }
 
 .nav-cart {
-  background-color: #d2d0d0a0;
+  background-color: #f8f8f8;
   border-radius: 4px;
   padding: 8px 16px;
   margin-left: 100px;
@@ -108,8 +108,8 @@
 }
 
 .cart-count {
-  background-color: red;
-  color: white;
+ 
+  color: black;
   font-size: 12px;
   font-weight: bold;
   min-width: 20px;
