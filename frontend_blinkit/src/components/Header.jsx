@@ -30,10 +30,10 @@ function Header() {
       </div>
 
       <div className="nav-cart">
-        <Link to="/cart">
+        <Link to="/cart" className="cart-link">
           <i className="fa-solid fa-cart-arrow-down"></i>
-          <span>{totalItem(cart)}</span>
-          Cart
+          <span className="cart-count">{totalItem(cart)}</span>
+          <span className="cart-text">Cart</span>
         </Link>
       </div>
     </div>
