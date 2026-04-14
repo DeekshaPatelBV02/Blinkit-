@@ -23,7 +23,7 @@ function EditProduct() {
 
   const getProduct = async () => {
     try {
-      const res = await axios.get(`https://blinkit-3-qi0k.onrender.com/products/${id}`);
+      const res = await axios.get(`https://blinkit-2-yemv.onrender.com/products/${id}`);
       setProduct(res.data);
     } catch (error) {
       console.log(error);
@@ -51,7 +51,7 @@ function EditProduct() {
     }
 
     try {
-      await axios.put(`https://blinkit-3-qi0k.onrender.com/products/${id}`, formData);
+      await axios.put(`https://blinkit-2-yemv.onrender.com/products/${id}`, formData);
       alert("Product Updated Successfully");
       navigate("/admin/manage-products");
     } catch (error) {

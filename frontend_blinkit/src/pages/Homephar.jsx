@@ -10,7 +10,7 @@ function Homephar() {
 
   useEffect(() => {
 
-    axios.get("https://blinkit-3-qi0k.onrender.com/getServices")
+    axios.get("https://blinkit-2-yemv.onrender.com/getServices")
       .then((res) => {
         setImages(res.data);
       })
@@ -29,7 +29,7 @@ function Homephar() {
         <div className="hero-section">
 
           <img
-            src={`https://blinkit-3-qi0k.onrender.com/images/${images[0].image}`}
+            src={`https://blinkit-2-yemv.onrender.com/images/${images[0].image}`}
             alt="banner"
             onClick={() => navigate("/products")}
           />
@@ -47,7 +47,7 @@ function Homephar() {
           <div className="service-card" key={index}>
 
             <img
-              src={`https://blinkit-3-qi0k.onrender.com/images/${item.image}`}
+              src={`https://blinkit-2-yemv.onrender.com/images/${item.image}`}
               alt="service"
               onClick={() => navigate("/products")}
             />

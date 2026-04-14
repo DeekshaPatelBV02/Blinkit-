@@ -19,7 +19,7 @@ function CreateProduct() {
 
     try {
 
-      await axios.post("https://blinkit-3-qi0k.onrender.com/addCategory", formData);
+      await axios.post("https://blinkit-2-yemv.onrender.com/addCategory", formData);
 
       alert("Category added");
 

@@ -13,13 +13,13 @@ function ManageProducts() {
   }, []);
 
   const getProducts = async () => {
-    const res = await axios.get("https://blinkit-3-qi0k.onrender.com/products");
+    const res = await axios.get("https://blinkit-2-yemv.onrender.com/products");
     setProducts(res.data);
   };
 
   const handleDelete = async (id) => {
 
-    await axios.delete(`https://blinkit-3-qi0k.onrender.com/products/${id}`);
+    await axios.delete(`https://blinkit-2-yemv.onrender.com/products/${id}`);
 
     alert("Product deleted");
 
@@ -52,7 +52,7 @@ function ManageProducts() {
 
               <td>
                 <img
-                  src={`https://blinkit-3-qi0k.onrender.com/images/${product.file}`}
+                  src={`https://blinkit-2-yemv.onrender.com/images/${product.file}`}
                   alt={product.name}
                   className="product-img" />
               </td>

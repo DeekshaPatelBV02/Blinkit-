@@ -14,12 +14,12 @@ function ManageUsers(){
     },[]);
 
     const getUsers = async() =>{
-        const res = await axios.get("https://blinkit-3-qi0k.onrender.com/users");
+        const res = await axios.get("https://blinkit-2-yemv.onrender.com/users");
         setUsers(res.data);
     };
 
     const handleDelete=async(id)=>{
-        await axios.delete(`https://blinkit-3-qi0k.onrender.com/users/${id}`);
+        await axios.delete(`https://blinkit-2-yemv.onrender.com/users/${id}`);
 
         alert("Users deleted");
 

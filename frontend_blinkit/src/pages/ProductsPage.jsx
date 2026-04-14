@@ -15,7 +15,7 @@ function ProductsPage(){
     },[category]);
     const getProducts=async()=>{
         try{
-            const res=await axios.get(`https://blinkit-3-qi0k.onrender.com/products/category/${category}`);
+            const res=await axios.get(`https://blinkit-2-yemv.onrender.com/products/category/${category}`);
             setProducts(res.data);
         }catch(error){
             console.log(error);
@@ -27,7 +27,7 @@ function ProductsPage(){
             <div className="product">
                 {Products.map((p)=>
                 <div className="single-product" key={p._id}>
-                    <img src={`https://blinkit-3-qi0k.onrender.com/images/${p.file}`}
+                    <img src={`https://blinkit-2-yemv.onrender.com/images/${p.file}`}
                     alt={p.name}
                     onClick={()=>navigate(`/product/${p._id}`)}/>
                     <p className="product-name">{p.name}</p>

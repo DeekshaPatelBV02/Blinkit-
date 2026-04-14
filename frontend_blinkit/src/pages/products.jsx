@@ -12,7 +12,7 @@ function Products() {
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const res = await axios.get("https://blinkit-3-qi0k.onrender.com/getCategories");
+        const res = await axios.get("https://blinkit-2-yemv.onrender.com/getCategories");
         console.log("Categories API response:", res.data);
 
         if (Array.isArray(res.data)) {
@@ -43,7 +43,7 @@ function Products() {
         categories.map((cat) => (
           <div className="category-card" key={cat._id}>
             <img
-              src={`https://blinkit-3-qi0k.onrender.com/images/${cat.image}`}
+              src={`https://blinkit-2-yemv.onrender.com/images/${cat.image}`}
               alt={cat.name}
               onClick={() => navigate(`/products/${cat.name}`)}
             />

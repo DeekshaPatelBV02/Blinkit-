@@ -12,7 +12,7 @@ function AdminManageOrders() {
     try {
       let status = e.target.value;
 
-      await axios.put(`https://blinkit-3-qi0k.onrender.com/orders/${id}`, { status })
+      await axios.put(`https://blinkit-2-yemv.onrender.com/orders/${id}`, { status })
 
       getOrders(); 
     } catch (err) {
@@ -23,7 +23,7 @@ function AdminManageOrders() {
 
   const getOrders = () => {
     axios
-      .get(`https://blinkit-3-qi0k.onrender.com/orders`)
+      .get(`https://blinkit-2-yemv.onrender.com/orders`)
       .then((res) => {
         setOrders(res.data);
       })
@@ -37,7 +37,7 @@ function AdminManageOrders() {
   
   const deleteOrder = (id) => {
     axios
-      .delete(`https://blinkit-3-qi0k.onrender.com/orders/${id}`)
+      .delete(`https://blinkit-2-yemv.onrender.com/orders/${id}`)
       .then(() => {
         alert("Order Deleted");
         getOrders();
