@@ -23,11 +23,13 @@ const crypto = require("crypto");
 const app = express();
 
 /* MIDDLEWARE */
+const cors = require("cors");
+
 app.use(cors({
   origin: [
     "http://localhost:5173",
     "https://blinkit-1tnsb92ku-deekshapatelbv02s-projects.vercel.app",
-    "https://blinkit-two-pink.vercel.app"
+    "https://blinkit-r8zko4j5h-deekshapatelbv02s-projects.vercel.app" // ✅ ADD THIS
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
