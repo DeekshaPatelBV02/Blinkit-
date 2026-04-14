@@ -23,7 +23,7 @@ const crypto = require("crypto");
 const app = express();
 
 /* MIDDLEWARE */
-const cors = require("cors");
+
 
 app.use(cors({
   origin: [
