@@ -7,7 +7,6 @@ import axios from "axios";
 import "../styles/checkout.css";
 
 function Checkout() {
-
   const { cart = [], dispatch } = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -33,59 +32,84 @@ function Checkout() {
     });
 
   const handlePayment = async () => {
+    try {
+      const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+      if (!res) {
+        alert("Razorpay failed");
+        return;
+      }
 
-    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
-    if (!res) return alert("Razorpay failed");
-
-    const { data } = await axios.post("https://blinkit-2-yemv.onrender.com/orders", {
-      amount: totalPrice(cart) * 100,
-      currency: "INR",
-    });
-
-    const options = {
-      key: "rzp_test_SYBkOch7KPkXkK",
-      amount: data.amount,
-      currency: data.currency,
-      order_id: data.id,
-
-      handler: async (response) => {
-        const verify = await axios.post(
-          "https://blinkit-2-yemv.onrender.com/verify-payment",
-          response
-        );
-
-        if (verify.data.success) {
-          await placeOrder("Online", response.razorpay_payment_id);
-        } else {
-          alert("Payment failed");
+      const { data } = await axios.post(
+        "https://blinkit-2-yemv.onrender.com/create-order",
+        {
+          amount: totalPrice(cart) * 100,
+          currency: "INR",
         }
-      },
+      );
 
-      prefill: {
-        name: form.fullName,
-        contact: form.number,
-      },
-    };
+      const options = {
+        key: "rzp_test_SYBkOch7KPkXkK",
+        amount: data.amount,
+        currency: data.currency,
+        order_id: data.id,
 
-    new window.Razorpay(options).open();
+        handler: async (response) => {
+          try {
+            const verify = await axios.post(
+              "https://blinkit-2-yemv.onrender.com/verify-payment",
+              response
+            );
+
+            if (verify.data.success) {
+              await placeOrder("Online", response.razorpay_payment_id);
+            } else {
+              alert("Payment failed");
+            }
+          } catch (error) {
+            console.log("Verification error:", error);
+            alert("Verification failed");
+          }
+        },
+
+        prefill: {
+          name: form.fullName,
+          email: form.email,
+          contact: form.number,
+        },
+
+        theme: {
+          color: "#0f8f1f",
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.log("Payment error:", error);
+      alert("Payment failed");
+    }
   };
 
   const placeOrder = async (mode, paymentId = "") => {
+    try {
+      const orderData = {
+        products: cart,
+        user: { ...form, payment: mode },
+        totalItems: totalItem(cart),
+        totalPrice: totalPrice(cart),
+        paymentId,
+      };
 
-    const orderData = {
-      products: cart,
-      user: { ...form, payment: mode },
-      totalItems: totalItem(cart),
-      totalPrice: totalPrice(cart),
-      paymentId,
-    };
+      await axios.post("https://blinkit-2-yemv.onrender.com/orders/add", orderData);
 
-    await axios.post("hhttps://blinkit-2-yemv.onrender.com/orders/add", orderData);
+      alert("Order Placed");
 
-    alert("Order Placed ");
-
-    dispatch({ type: "CLEAR_CART" });
-    navigate("/");
+      dispatch({ type: "CLEAR_CART" });
+      navigate("/");
+    } catch (error) {
+      console.log("Order save error:", error);
+      alert("Order saving failed");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -106,9 +130,7 @@ function Checkout() {
 
   return (
     <div className="checkout-container">
-
       <form className="checkout-form" onSubmit={handleSubmit}>
-
         <h2 className="checkout-title">Checkout</h2>
 
         <div className="checkout-summary">
@@ -157,9 +179,7 @@ function Checkout() {
         <button className="checkout-button" type="submit">
           Place Order
         </button>
-
       </form>
-
     </div>
   );
 }
