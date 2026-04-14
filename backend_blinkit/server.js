@@ -33,14 +33,30 @@ app.get("/", (req, res) => {
 });
 
 /* MONGODB */
-if (!process.env.MONGO_URL) {
-  console.log("MONGO_URL missing");
-  process.exit(1);
+/* MONGODB (FIXED) */
+async function connectDB() {
+  try {
+    if (!process.env.MONGO_URL) {
+      throw new Error("MONGO_URL missing");
+    }
+
+    console.log("Connecting to MongoDB...");
+
+    await mongoose.connect(process.env.MONGO_URL, {
+      serverSelectionTimeoutMS: 30000
+    });
+
+    console.log("MongoDB Connected");
+    console.log("DB Name:", mongoose.connection.name);
+
+  } catch (err) {
+    console.error("MongoDB ERROR:");
+    console.error(err);
+    process.exit(1);
+  }
 }
 
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
+connectDB();
 
 /* USERS */
 app.post("/register", async (req, res) => {
@@ -242,6 +258,8 @@ app.post("/verify-payment", (req, res) => {
 /* SERVER */
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+mongoose.connection.once("open", () => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 });
