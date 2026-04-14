@@ -1,39 +1,29 @@
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+const SibApiV3Sdk = require("@getbrevo/brevo");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000
-});
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("Transport verify error:", error);
-  } else {
-    console.log("Mail server is ready");
-  }
-});
+apiInstance.setApiKey(
+  SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
+  process.env.BREVO_API_KEY
+);
 
 const sendMail = async (to, subject, msg) => {
   try {
     console.log("Sending email to:", to);
 
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to,
-      subject,
-      html: msg
-    });
+    const emailData = {
+      to: [{ email: to }],
+      sender: { email: process.env.EMAIL_USER },
+      subject: subject,
+      htmlContent: msg,
+    };
 
-    console.log("Email sent:", info.response);
+    const response = await apiInstance.sendTransacEmail(emailData);
+
+    console.log("Email sent:", response.messageId);
+
   } catch (error) {
-    console.log("MAIL ERROR FULL:", error);
+    console.log("MAIL ERROR:", error);
   }
 };
 
