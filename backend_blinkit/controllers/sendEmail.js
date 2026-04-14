@@ -1,27 +1,25 @@
-const SibApiV3Sdk = require("@getbrevo/brevo");
+const { BrevoClient } = require("@getbrevo/brevo");
 
-const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-
-apiInstance.setApiKey(
-  SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY
-);
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
+  timeoutInSeconds: 30,
+});
 
 const sendMail = async (to, subject, msg) => {
   try {
     console.log("Sending email to:", to);
 
-    const emailData = {
-      to: [{ email: to }],
-      sender: { email: process.env.EMAIL_USER },
-      subject: subject,
+    const result = await brevo.transactionalEmails.sendTransacEmail({
+      subject,
       htmlContent: msg,
-    };
+      sender: {
+        email: process.env.EMAIL_USER,
+        name: "Blinkit Clone",
+      },
+      to: [{ email: to }],
+    });
 
-    const response = await apiInstance.sendTransacEmail(emailData);
-
-    console.log("Email sent:", response.messageId);
-
+    console.log("Email sent. Message ID:", result.messageId);
   } catch (error) {
     console.log("MAIL ERROR:", error);
   }
