@@ -11,7 +11,7 @@ const CategoryModel = require("./models/category");
 const CartModel = require("./models/Cart");
 const OrderModel = require("./models/order");
 
-const { sendOtp } = require("./controllers/authController");
+const { sendOtp, verifyOtp } = require("./controllers/authController");
 const { placeOrder } = require("./controllers/orderController");
 const { status } = require("./controllers/statusController");
 
@@ -88,6 +88,7 @@ app.get("/users", async (req, res) => {
 
 /* OTP */
 app.post("/sendOtp", sendOtp);
+app.post("/verifyOtp", verifyOtp);
 
 /* PRODUCTS */
 app.get("/products", async (req, res) => {

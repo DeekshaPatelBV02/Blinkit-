@@ -50,5 +50,35 @@ exports.sendOtp = async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 };
+exports.verifyOtp = async (req, res) => {
+  try {
+    const { mobile, otp } = req.body;
 
-module.exports = { sendOtp: exports.sendOtp };
+    const user = await User.findOne({ mobile });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (user.otp !== otp) {
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
+
+    if (new Date() > user.otpExpiry) {
+      return res.status(400).json({ success: false, message: "OTP expired" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP verified successfully"
+    });
+  } catch (error) {
+    console.log("VERIFY OTP ERROR:", error);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+module.exports = {
+  sendOtp: exports.sendOtp,
+  verifyOtp: exports.verifyOtp
+};
