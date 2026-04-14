@@ -35,8 +35,9 @@ function Sign() {
         otp: finalOtp,
       });
 
+      console.log("VERIFY RESPONSE:", res.data);   // 👈 ADD THIS LINE
+
       if (res.data.success) {
-        // ✅ Navigate to Home Page
         navigate("/");
       }
     } catch (err) {

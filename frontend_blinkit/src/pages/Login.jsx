@@ -11,16 +11,19 @@ function Login() {
   e.preventDefault();
 
   try {
-    await axios.post(
+    const res = await axios.post(
       "https://blinkit-2-yemv.onrender.com/sendOtp",
       { mobile }
     );
 
-    // ✅ move navigate INSIDE try
+    console.log("OTP response:", res.data);
+    alert("OTP is: " + res.data.otp);   // 👈 ADD THIS LINE
+
     navigate("/sign", { state: { mobile } });
 
   } catch (err) {
     console.log("API Error:", err);
+    alert("Failed to send OTP");
   }
 };
   return (
