@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import "../styles/header.css";
 import { useContext } from "react";
 import { CartContext } from "../Features/ContextProvider";
+import { totalItem } from "../Features/CartReducer";
 
 function Header() {
-  const { cart = [] } = useContext(CartContext); 
+  const { cart = [] } = useContext(CartContext);
 
   return (
     <div className="navbar">
@@ -31,10 +32,12 @@ function Header() {
       <div className="nav-cart">
         <Link to="/cart">
           <i className="fa-solid fa-cart-arrow-down"></i>
-          <span>{cart.length}</span>
+          <span>{totalItem(cart)}</span>
           Cart
         </Link>
       </div>
     </div>
   );
-}export default Header;
+}
+
+export default Header;
