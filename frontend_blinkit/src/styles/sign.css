@@ -7,7 +7,8 @@
    transform: translate(-50%, -50%);
    background: #fff;
    width: 570px;
-   height:310px;
+   height:auto;
+   padding: 20px;
    
    border-radius: 12px;
    text-align: center;
@@ -60,17 +61,15 @@
 }
 
 .button2 {
-  width: 120px;
-  height: 42px;
-  background: green;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  display: block;
-  margin: 20px auto 10px;
+    width: 80%;
+    padding: 12px;
+    margin-top: 10px;
+    background-color: #0c831f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .resendcode {
