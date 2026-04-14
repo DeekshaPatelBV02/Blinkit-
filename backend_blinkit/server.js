@@ -26,11 +26,7 @@ const app = express();
 
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://blinkit-1tnsb92ku-deekshapatelbv02s-projects.vercel.app",
-    "https://blinkit-r8zko4j5h-deekshapatelbv02s-projects.vercel.app" // ✅ ADD THIS
-  ],
+  origin: true,   // ✅ allow all Vercel domains automatically
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
