@@ -20,24 +20,23 @@ exports.placeOrder = async (req, res) => {
         email: orderData.user.email,
         number: orderData.user.number,
         address: orderData.user.address,
-        payment: orderData.user.payment
-      }
+        payment: orderData.user.payment,
+      },
     });
 
     await newOrder.save();
 
     res.status(200).json({
       success: true,
-      message: "Order placed successfully"
+      message: "Order placed successfully",
     });
-
   } catch (error) {
     console.log("ERROR:", error);
 
     res.status(500).json({
       success: false,
       message: "Error placing order",
-      error: error.message
+      error: error.message,
     });
   }
 };

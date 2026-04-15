@@ -1,6 +1,6 @@
 import emailjs from "@emailjs/browser";
 
-export const sendEmail = async ({ name, email, amount }) => {
+export const sendEmail = async ({ name, email, amount, payment }) => {
   try {
     const response = await emailjs.send(
       "service_kfa6rf7",
@@ -14,8 +14,10 @@ export const sendEmail = async ({ name, email, amount }) => {
       "eDG7KnyyjhD8muxij"
     );
 
-    console.log("Email sent successfully ", response);
+    console.log("Email sent successfully", response);
+    return response;
   } catch (error) {
-    console.error("Email failed ", error);
+    console.error("Email failed", error);
+    throw error;
   }
 };
