@@ -1,4 +1,5 @@
 const User = require("../models/users");
+const RegisterModel = require("../models/register");
 const crypto = require("crypto");
 const sendMail = require("./sendEmail");
 
@@ -16,6 +17,23 @@ exports.sendOtp = async (req, res) => {
       return res.status(400).json({ message: "Mobile number required" });
     }
 
+    // find registered user by phone number
+    const registeredUser = await RegisterModel.findOne({ phone: mobile });
+
+    if (!registeredUser) {
+      return res.status(404).json({
+        success: false,
+        message: "No account found. Please signup first."
+      });
+    }
+
+    if (!registeredUser.email) {
+      return res.status(400).json({
+        success: false,
+        message: "Registered email not found for this account."
+      });
+    }
+
     const otp = generateOTP();
     const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
 
@@ -30,43 +48,69 @@ exports.sendOtp = async (req, res) => {
     }
 
     console.log("Generated OTP:", otp);
+    console.log("Sending OTP to:", registeredUser.email);
 
-    sendMail(
-      process.env.EMAIL_USER,
+    await sendMail(
+      registeredUser.email,
       "Your Blinkit OTP",
-      `<h2>Your OTP is: ${otp}</h2><p>Valid for 5 minutes</p>`
-    ).catch((mailError) => {
-      console.log("MAIL ERROR:", mailError);
-    });
+      `
+        <h2>Your OTP is: ${otp}</h2>
+        <p>Valid for 5 minutes</p>
+      `
+    );
 
     return res.status(200).json({
       success: true,
-      message: "OTP Sent Successfully",
-      mobile,
-      otp
+      message: "OTP sent to your registered email",
+      mobile
     });
   } catch (error) {
     console.log("SEND OTP ERROR:", error);
-    return res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({
+      success: false,
+      message: "Server Error"
+    });
   }
 };
+
 exports.verifyOtp = async (req, res) => {
   try {
     const { mobile, otp } = req.body;
 
+    if (!mobile || !otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Mobile and OTP are required"
+      });
+    }
+
     const user = await User.findOne({ mobile });
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
     }
 
     if (user.otp !== otp) {
-      return res.status(400).json({ success: false, message: "Invalid OTP" });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP"
+      });
     }
 
     if (new Date() > user.otpExpiry) {
-      return res.status(400).json({ success: false, message: "OTP expired" });
+      return res.status(400).json({
+        success: false,
+        message: "OTP expired"
+      });
     }
+
+    // clear otp after successful verification
+    user.otp = "null";
+    user.otpExpiry = null;
+    await user.save();
 
     return res.status(200).json({
       success: true,
@@ -74,7 +118,10 @@ exports.verifyOtp = async (req, res) => {
     });
   } catch (error) {
     console.log("VERIFY OTP ERROR:", error);
-    return res.status(500).json({ success: false, message: "Server Error" });
+    return res.status(500).json({
+      success: false,
+      message: "Server Error"
+    });
   }
 };
 

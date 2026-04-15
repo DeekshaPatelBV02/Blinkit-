@@ -68,10 +68,40 @@ connectDB();
 /* USERS */
 app.post("/register", async (req, res) => {
   try {
-    const user = await RegisterModel.create(req.body);
-    res.json(user);
+    const { name, phone, email, password } = req.body;
+
+    if (!name || !phone || !email || !password) {
+      return res.status(400).json({ message: "Fill all fields" });
+    }
+
+    const existingEmail = await RegisterModel.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    const existingPhone = await RegisterModel.findOne({ phone });
+    if (existingPhone) {
+      return res.status(400).json({ message: "Phone number already registered" });
+    }
+
+    const user = await RegisterModel.create({
+      name,
+      phone,
+      email,
+      password
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "User Registered Successfully",
+      user
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.log("REGISTER ERROR:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Registration Failed"
+    });
   }
 });
 

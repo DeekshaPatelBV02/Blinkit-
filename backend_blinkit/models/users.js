@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  mobile: String,
+  mobile: {
+    type: String,
+    required: true,
+    unique: true
+  },
   otp: String,
   otpExpiry: Date
 });

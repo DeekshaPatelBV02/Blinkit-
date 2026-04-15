@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "../styles/addUsers.css";
 
 function AddUsers() {
-
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -13,40 +12,44 @@ function AddUsers() {
   const [password, setPassword] = useState("");
 
   const reg = async () => {
-
     if (!name || !phone || !email || !password) {
       alert("Fill all fields");
       return;
     }
 
     try {
-      const res = await axios.post("https://blinkit-2-yemv.onrender.com/register", {name,phone,email,password});
+      const res = await axios.post(
+        "https://blinkit-2-yemv.onrender.com/register",
+        { name, phone, email, password }
+      );
 
-localStorage.setItem("user", JSON.stringify(res.data));
-      alert("User Registered Successfully ");
-      navigate("/");
+      alert(res.data.message || "User Registered Successfully");
+
       setName("");
       setPhone("");
       setEmail("");
       setPassword("");
 
+      navigate("/login");
     } catch (err) {
       console.log(err);
-      alert("Registration Failed ");
+
+      if (err.response?.data?.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("Registration Failed");
+      }
     }
   };
 
   return (
     <div className="signup-overlay">
-
       <div className="signup-container">
-
         <div className="signup-logo">
           blink<span className="signup-it">it</span>
         </div>
 
         <h2 className="signup-title">Create Account</h2>
-
         <p className="signup-subtitle">Signup to continue</p>
 
         <div className="signup-input-box">
@@ -60,7 +63,7 @@ localStorage.setItem("user", JSON.stringify(res.data));
 
         <div className="signup-input-box">
           <input
-            type="number"
+            type="text"
             placeholder="Enter Mobile"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
@@ -69,7 +72,7 @@ localStorage.setItem("user", JSON.stringify(res.data));
 
         <div className="signup-input-box">
           <input
-            type="text"
+            type="email"
             placeholder="Enter Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -88,9 +91,7 @@ localStorage.setItem("user", JSON.stringify(res.data));
         <button className="signup-button" onClick={reg}>
           Signup
         </button>
-
       </div>
-
     </div>
   );
 }
