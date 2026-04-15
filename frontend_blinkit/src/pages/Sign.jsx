@@ -43,7 +43,7 @@ function Sign() {
 
       if (res.data.success) {
         alert("Login successful");
-        navigate("/login");
+        navigate("/");
       } else {
         alert(res.data.message || "Invalid OTP");
       }
