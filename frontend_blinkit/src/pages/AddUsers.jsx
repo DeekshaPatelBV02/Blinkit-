@@ -12,35 +12,39 @@ function AddUsers() {
   const [password, setPassword] = useState("");
 
   const reg = async () => {
-    if (!name || !phone || !email || !password) {
-      alert("Fill all fields");
-      return;
+  if (!name || !phone || !email || !password) {
+    alert("Fill all fields");
+    return;
+  }
+
+  console.log("Sending data:", { name, phone, email, password });
+
+  try {
+    const res = await axios.post(
+      "https://blinkit-2-yemv.onrender.com/register",
+      { name, phone, email, password }
+    );
+
+    alert(res.data.message || "User Registered Successfully");
+
+    setName("");
+    setPhone("");
+    setEmail("");
+    setPassword("");
+
+    navigate("/login");
+  } catch (err) {
+    console.log("FULL ERROR:", err);
+    console.log("STATUS:", err.response?.status);
+    console.log("BACKEND DATA:", err.response?.data);
+
+    if (err.response?.data?.message) {
+      alert(err.response.data.message);
+    } else {
+      alert("Registration Failed");
     }
-
-    try {
-      const res = await axios.post(
-        "https://blinkit-2-yemv.onrender.com/register",
-        { name, phone, email, password }
-      );
-
-      alert(res.data.message || "User Registered Successfully");
-
-      setName("");
-      setPhone("");
-      setEmail("");
-      setPassword("");
-
-      navigate("/login");
-    } catch (err) {
-      console.log(err);
-
-      if (err.response?.data?.message) {
-        alert(err.response.data.message);
-      } else {
-        alert("Registration Failed");
-      }
-    }
-  };
+  }
+};
 
   return (
     <div className="signup-overlay">
