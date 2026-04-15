@@ -2,38 +2,56 @@ import React, { useState } from "react";
 import "../styles/login.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { sendOtpEmail } from "../utils/sendOtpEmail"; // adjust path
 
 function Login() {
   const navigate = useNavigate();
   const [mobile, setMobile] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!mobile) {
-      alert("Enter mobile number");
-      return;
+  if (!mobile) {
+    alert("Enter mobile number");
+    return;
+  }
+
+  try {
+    // 1️⃣ get OTP from backend
+    const res = await axios.post(
+      "https://blinkit-2-yemv.onrender.com/sendOtp",
+      { mobile }
+    );
+
+    const otp = res.data.otp;
+
+    console.log("OTP:", otp);
+
+    // 2️⃣ get email from backend
+    const userRes = await axios.post(
+      "https://blinkit-2-yemv.onrender.com/getUserByMobile",
+      { mobile }
+    );
+
+    const email = userRes.data.email;
+
+    // 3️⃣ send email using EmailJS
+    await sendOtpEmail(email, otp);
+
+    alert("OTP sent to your email");
+
+    navigate("/sign", { state: { mobile } });
+
+  } catch (err) {
+    console.log("API Error:", err);
+
+    if (err.response?.data?.message) {
+      alert(err.response.data.message);
+    } else {
+      alert("Failed to send OTP");
     }
-
-    try {
-      const res = await axios.post(
-        "https://blinkit-2-yemv.onrender.com/sendOtp",
-        { mobile }
-      );
-
-      alert(res.data.message || "OTP sent to your registered email");
-
-      navigate("/sign", { state: { mobile } });
-    } catch (err) {
-      console.log("API Error:", err);
-
-      if (err.response?.data?.message) {
-        alert(err.response.data.message);
-      } else {
-        alert("Failed to send OTP");
-      }
-    }
-  };
+  }
+};
 
   return (
     <form onSubmit={handleSubmit}>

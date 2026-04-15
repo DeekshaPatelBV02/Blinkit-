@@ -1,7 +1,6 @@
 const User = require("../models/users");
 const RegisterModel = require("../models/register");
 const crypto = require("crypto");
-const sendMail = require("./sendEmail");
 
 const generateOTP = () => {
   return crypto.randomInt(1000, 10000).toString();
@@ -17,20 +16,12 @@ exports.sendOtp = async (req, res) => {
       return res.status(400).json({ message: "Mobile number required" });
     }
 
-    // find registered user by phone number
     const registeredUser = await RegisterModel.findOne({ phone: mobile });
 
     if (!registeredUser) {
       return res.status(404).json({
         success: false,
         message: "No account found. Please signup first."
-      });
-    }
-
-    if (!registeredUser.email) {
-      return res.status(400).json({
-        success: false,
-        message: "Registered email not found for this account."
       });
     }
 
@@ -48,22 +39,14 @@ exports.sendOtp = async (req, res) => {
     }
 
     console.log("Generated OTP:", otp);
-    console.log("Sending OTP to:", registeredUser.email);
-
-    await sendMail(
-      registeredUser.email,
-      "Your Blinkit OTP",
-      `
-        <h2>Your OTP is: ${otp}</h2>
-        <p>Valid for 5 minutes</p>
-      `
-    );
 
     return res.status(200).json({
       success: true,
-      message: "OTP sent to your registered email",
-      mobile
+      message: "OTP generated",
+      mobile,
+      otp   // 👈 send OTP to frontend
     });
+
   } catch (error) {
     console.log("SEND OTP ERROR:", error);
     return res.status(500).json({
@@ -107,8 +90,8 @@ exports.verifyOtp = async (req, res) => {
       });
     }
 
-    // clear otp after successful verification
-    user.otp = "null";
+    // ✅ correct clearing
+    user.otp = null;
     user.otpExpiry = null;
     await user.save();
 
@@ -116,6 +99,7 @@ exports.verifyOtp = async (req, res) => {
       success: true,
       message: "OTP verified successfully"
     });
+
   } catch (error) {
     console.log("VERIFY OTP ERROR:", error);
     return res.status(500).json({
