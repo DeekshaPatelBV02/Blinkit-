@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "../styles/login.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { sendOtpEmail } from "../utils/sendOtpEmail"; // adjust path
+import axios from "axios"
+import { sendOtpEmail } from "../utils/sendOtp";
+
 
 function Login() {
   const navigate = useNavigate();
