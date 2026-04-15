@@ -1,17 +1,18 @@
 import emailjs from "@emailjs/browser";
+require("dotenv").config();
 
 export const sendEmail = async ({ name, email, amount, payment }) => {
   try {
     const response = await emailjs.send(
-      "service_kfa6rf7",
-      "template_k2hj38r",
+      process.env.SERVICE_KEY,
+      process.env.TEMPLATE_KEY,
       {
         name,
         email,
         amount,
         payment,
       },
-      "eDG7KnyyjhD8muxij"
+      process.env.PUBLIC_KEY
     );
 
     console.log("Email sent successfully", response);
