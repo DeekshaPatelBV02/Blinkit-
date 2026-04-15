@@ -33,19 +33,22 @@ function Checkout() {
     });
 
   const placeOrder = async (mode, paymentId = "") => {
+  try {
+    const orderData = {
+      products: cart,
+      user: { ...form, payment: mode },
+      totalItems: totalItem(cart),
+      totalPrice: totalPrice(cart),
+      paymentId,
+    };
+
+    
+    await axios.post("https://blinkit-2-yemv.onrender.com/orders/add", orderData);
+
+    console.log("Order saved successfully");
+
+  
     try {
-      const orderData = {
-        products: cart,
-        user: { ...form, payment: mode },
-        totalItems: totalItem(cart),
-        totalPrice: totalPrice(cart),
-        paymentId,
-      };
-
-     
-      await axios.post("https://blinkit-2-yemv.onrender.com/orders/add", orderData);
-
-      
       await sendEmail({
         name: form.fullName,
         email: form.email,
@@ -53,16 +56,21 @@ function Checkout() {
         payment: mode,
       });
 
-      alert("Order placed successfully");
-
-      dispatch({ type: "CLEAR_CART" });
-      navigate("/");
-    } catch (error) {
-      console.error("Order error:", error);
-      alert("Something went wrong while placing order");
+      console.log("Email sent");
+    } catch (emailError) {
+      console.error("Email failed:", emailError);
     }
-  };
 
+    alert("Order placed successfully");
+
+    dispatch({ type: "CLEAR_CART" });
+    navigate("/");
+
+  } catch (error) {
+    console.error("Order error:", error);
+    alert("Order failed");
+  }
+};
   const handlePayment = async () => {
     try {
       const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
