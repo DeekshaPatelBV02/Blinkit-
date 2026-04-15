@@ -11,7 +11,7 @@ function Sign() {
 
   const [otp, setOtp] = useState(["", "", "", ""]);
 
-  // Handle OTP input change
+  
   const handleChange = (value, index) => {
     if (isNaN(value)) return;
 
@@ -19,13 +19,13 @@ function Sign() {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // auto focus next box
+   
     if (value && index < 3) {
       document.getElementById(`otp-${index + 1}`).focus();
     }
   };
 
-  // Verify OTP
+ 
   const handleVerify = async () => {
     const finalOtp = otp.join("");
 
@@ -36,7 +36,7 @@ function Sign() {
       });
 
       if (res.data.success) {
-        // ✅ Navigate to Home Page
+       
         navigate("/");
       }
     } catch (err) {
@@ -66,12 +66,12 @@ function Sign() {
         ))}
       </div>
 
-      {/* Verify Button */}
+      
       <button className="button2" onClick={handleVerify}>
         Verify OTP
       </button>
 
-      {/* Resend */}
+     
       <p className="resendcode" onClick={async () => {
         await axios.post("https://blinkit-2-yemv.onrender.com/sendOtp", { mobile });
         alert("OTP Resent");

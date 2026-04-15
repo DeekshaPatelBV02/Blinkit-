@@ -4,10 +4,10 @@ import { CartContext } from "../Features/ContextProvider";
 import { totalItem, totalPrice } from "../Features/CartReducer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { sendEmail } from "../utils/sendEmail";
 import "../styles/checkout.css";
 
 function Checkout() {
-
   const { cart = [], dispatch } = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -16,7 +16,7 @@ function Checkout() {
     number: "",
     email: "",
     address: "",
-    payment: ""
+    payment: "",
   });
 
   const handleChange = (e) => {
@@ -32,60 +32,91 @@ function Checkout() {
       document.body.appendChild(script);
     });
 
-  const handlePayment = async () => {
+  const placeOrder = async (mode, paymentId = "") => {
+    try {
+      const orderData = {
+        products: cart,
+        user: { ...form, payment: mode },
+        totalItems: totalItem(cart),
+        totalPrice: totalPrice(cart),
+        paymentId,
+      };
 
-    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
-    if (!res) return alert("Razorpay failed");
+     
+      await axios.post("https://blinkit-2-yemv.onrender.com/orders/add", orderData);
 
-    const { data } = await axios.post("https://blinkit-2-yemv.onrender.com/orders", {
-      amount: totalPrice(cart) * 100,
-      currency: "INR",
-    });
-
-    const options = {
-      key: "rzp_test_SYBkOch7KPkXkK",
-      amount: data.amount,
-      currency: data.currency,
-      order_id: data.id,
-
-      handler: async (response) => {
-        const verify = await axios.post(
-          "https://blinkit-2-yemv.onrender.com/verify-payment",
-          response
-        );
-
-        if (verify.data.success) {
-          await placeOrder("Online", response.razorpay_payment_id);
-        } else {
-          alert("Payment failed");
-        }
-      },
-
-      prefill: {
+      
+      await sendEmail({
         name: form.fullName,
-        contact: form.number,
-      },
-    };
+        email: form.email,
+        amount: totalPrice(cart),
+        payment: mode,
+      });
 
-    new window.Razorpay(options).open();
+      alert("Order placed successfully");
+
+      dispatch({ type: "CLEAR_CART" });
+      navigate("/");
+    } catch (error) {
+      console.error("Order error:", error);
+      alert("Something went wrong while placing order");
+    }
   };
 
-  const placeOrder = async (mode, paymentId = "") => {
+  const handlePayment = async () => {
+    try {
+      const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+      if (!res) {
+        alert("Razorpay failed");
+        return;
+      }
 
-    const orderData = {
-      products: cart,
-      user: { ...form, payment: mode },
-      totalItems: totalItem(cart),
-      totalPrice: totalPrice(cart),
-      paymentId,
-    };
+      const { data } = await axios.post("https://blinkit-2-yemv.onrender.com/orders", {
+        amount: totalPrice(cart) * 100,
+        currency: "INR",
+      });
 
-    await axios.post("https://blinkit-2-yemv.onrender.com/orders/add", orderData);
+      const options = {
+        key: "rzp_test_SYBkOch7KPkXkK",
+        amount: data.amount,
+        currency: data.currency,
+        order_id: data.id,
 
-    alert("Order Placed ");
+        handler: async (response) => {
+          try {
+            const verify = await axios.post(
+              "https://blinkit-2-yemv.onrender.com/verify-payment",
+              response
+            );
 
-    dispatch({ type: "CLEAR_CART" });
-    navigate("/");
+            if (verify.data.success) {
+              await placeOrder("Online", response.razorpay_payment_id);
+            } else {
+              alert("Payment failed");
+            }
+          } catch (error) {
+            console.error("Payment verification error:", error);
+            alert("Payment verification failed");
+          }
+        },
+
+        prefill: {
+          name: form.fullName,
+          contact: form.number,
+          email: form.email,
+        },
+
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.error("Razorpay error:", error);
+      alert("Unable to start payment");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -94,21 +125,25 @@ function Checkout() {
     const { fullName, number, email, address, payment } = form;
 
     if (!fullName || !number || !email || !address || !payment) {
-      return alert("Fill all fields");
+      alert("Fill all fields");
+      return;
+    }
+
+    if (cart.length === 0) {
+      alert("Your cart is empty");
+      return;
     }
 
     if (payment === "Online") {
-      handlePayment();
+      await handlePayment();
     } else {
-      placeOrder("COD");
+      await placeOrder("COD");
     }
   };
 
   return (
     <div className="checkout-container">
-
       <form className="checkout-form" onSubmit={handleSubmit}>
-
         <h2 className="checkout-title">Checkout</h2>
 
         <div className="checkout-summary">
@@ -120,6 +155,7 @@ function Checkout() {
           className="checkout-input"
           name="fullName"
           placeholder="Full Name"
+          value={form.fullName}
           onChange={handleChange}
         />
 
@@ -127,6 +163,7 @@ function Checkout() {
           className="checkout-input"
           name="number"
           placeholder="Phone Number"
+          value={form.number}
           onChange={handleChange}
         />
 
@@ -134,6 +171,7 @@ function Checkout() {
           className="checkout-input"
           name="email"
           placeholder="Email"
+          value={form.email}
           onChange={handleChange}
         />
 
@@ -141,12 +179,14 @@ function Checkout() {
           className="checkout-textarea"
           name="address"
           placeholder="Address"
+          value={form.address}
           onChange={handleChange}
         />
 
         <select
           className="checkout-select"
           name="payment"
+          value={form.payment}
           onChange={handleChange}
         >
           <option value="">Select Payment</option>
@@ -157,9 +197,7 @@ function Checkout() {
         <button className="checkout-button" type="submit">
           Place Order
         </button>
-
       </form>
-
     </div>
   );
 }
