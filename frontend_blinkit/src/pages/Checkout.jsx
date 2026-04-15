@@ -5,6 +5,7 @@ import { totalItem, totalPrice } from "../Features/CartReducer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/checkout.css";
+import { sendEmail } from "../utils/sendEmail";
 
 function Checkout() {
   const { cart = [], dispatch } = useContext(CartContext);
@@ -102,7 +103,15 @@ function Checkout() {
 
       await axios.post("https://blinkit-2-yemv.onrender.com/orders/add", orderData);
 
-      alert("Order Placed");
+    
+      await sendEmail({
+        name: form.fullName,
+        email: form.email,
+        amount: totalPrice(cart),
+        payment: mode,
+      });
+
+      alert("Order Placed Successfully");
 
       dispatch({ type: "CLEAR_CART" });
       navigate("/");
@@ -142,6 +151,7 @@ function Checkout() {
           className="checkout-input"
           name="fullName"
           placeholder="Full Name"
+          value={form.fullName}
           onChange={handleChange}
         />
 
@@ -149,6 +159,7 @@ function Checkout() {
           className="checkout-input"
           name="number"
           placeholder="Phone Number"
+          value={form.number}
           onChange={handleChange}
         />
 
@@ -156,6 +167,7 @@ function Checkout() {
           className="checkout-input"
           name="email"
           placeholder="Email"
+          value={form.email}
           onChange={handleChange}
         />
 
@@ -163,12 +175,14 @@ function Checkout() {
           className="checkout-textarea"
           name="address"
           placeholder="Address"
+          value={form.address}
           onChange={handleChange}
         />
 
         <select
           className="checkout-select"
           name="payment"
+          value={form.payment}
           onChange={handleChange}
         >
           <option value="">Select Payment</option>
