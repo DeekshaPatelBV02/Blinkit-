@@ -1,58 +1,63 @@
 import React, { useState } from "react";
 import "../styles/login.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"
-import { sendOtpEmail } from "../utils/sendOtp";
-
+import axios from "axios";
+import { sendOtpEmail } from "../utils/sendOtp"; // or ../utils/sendOtp if that is your actual filename
 
 function Login() {
   const navigate = useNavigate();
   const [mobile, setMobile] = useState("");
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!mobile) {
-    alert("Enter mobile number");
-    return;
-  }
-
-  try {
-    // 1️⃣ get OTP from backend
-    const res = await axios.post(
-      "https://blinkit-2-yemv.onrender.com/sendOtp",
-      { mobile }
-    );
-
-    const otp = res.data.otp;
-
-    console.log("OTP:", otp);
-
-    // 2️⃣ get email from backend
-    const userRes = await axios.post(
-      "https://blinkit-2-yemv.onrender.com/getUserByMobile",
-      { mobile }
-    );
-
-    const email = userRes.data.email;
-
-    // 3️⃣ send email using EmailJS
-    await sendOtpEmail(email, otp);
-
-    alert("OTP sent to your email");
-
-    navigate("/sign", { state: { mobile } });
-
-  } catch (err) {
-    console.log("API Error:", err);
-
-    if (err.response?.data?.message) {
-      alert(err.response.data.message);
-    } else {
-      alert("Failed to send OTP");
+    if (!mobile.trim()) {
+      alert("Enter mobile number");
+      return;
     }
-  }
-};
+
+    try {
+      const res = await axios.post(
+        "https://blinkit-2-yemv.onrender.com/sendOtp",
+        { mobile: mobile.trim() }
+      );
+
+      const otp = res.data.otp;
+      console.log("OTP:", otp);
+
+      const userRes = await axios.post(
+        "https://blinkit-2-yemv.onrender.com/getUserByMobile",
+        { mobile: mobile.trim() }
+      );
+
+      const email = userRes.data.email;
+      console.log("EMAIL FROM BACKEND:", email);
+
+      if (!email) {
+        alert("Email not found for this mobile number");
+        return;
+      }
+
+      const sent = await sendOtpEmail(email, otp);
+
+      if (!sent) {
+        alert("OTP email failed");
+        return;
+      }
+
+      alert("OTP sent to your email");
+      navigate("/sign", { state: { mobile: mobile.trim() } });
+    } catch (err) {
+      console.log("API ERROR:", err);
+      console.log("API ERROR DATA:", err.response?.data);
+
+      if (err.response?.data?.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("Failed to send OTP");
+      }
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>

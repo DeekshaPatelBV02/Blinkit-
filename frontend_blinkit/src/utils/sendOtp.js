@@ -2,18 +2,20 @@ import emailjs from "@emailjs/browser";
 
 export const sendOtpEmail = async (email, otp) => {
   try {
-    await emailjs.send(
+    const response = await emailjs.send(
       import.meta.env.VITE_SERVICE_KEY,
-      import.meta.env.VITE_OTP_TEMPLATE_KEY, 
+      import.meta.env.VITE_OTP_TEMPLATE_KEY,
       {
-        email: email,
-        otp: otp,
+        email,
+        otp,
       },
       import.meta.env.VITE_PUBLIC_KEY
     );
 
-    console.log("OTP sent");
+    console.log("EMAILJS SUCCESS:", response);
+    return true;
   } catch (error) {
-    console.error("OTP failed", error);
+    console.error("EMAILJS ERROR:", error);
+    return false;
   }
 };
