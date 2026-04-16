@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/AdminManageOrder.css";
-import { sendStatusEmail } from "../utils/sendStatusEmail";
+import { sendStatusEmail } from "../utils/sendOtpEmail";
+
 
 function AdminManageOrders() {
   const [orders, setOrders] = useState([]);
