@@ -9,13 +9,14 @@ function AddProduct() {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [file, setFile] = useState(null);
+  /*const [file, setFile] = useState(null);*/
+  const [imageUrl,setImageUrl]=useState("");
 
   const navigate = useNavigate();
 
   const upload = async () => {
 
-    if (!name || !price || !category || !description || !file) {
+    if (!name || !price || !category || !description || !imageUrl) {
       alert("Please fill all fields");
       return;
     }
@@ -38,7 +39,8 @@ function AddProduct() {
       setPrice("");
       setCategory("");
       setDescription("");
-      setFile(null);
+      setImageUrl("");
+      /*setFile(null);*/
 
     } catch (err) {
       console.log(err);
@@ -98,10 +100,12 @@ function AddProduct() {
           value={description}
           onChange={(e)=> setDescription(e.target.value)}></textarea>
 
+       
         <input
-          type="file"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
+          type="text"
+          placeholder="Add image url"
+          value={imageUrl}
+          onChange={(e)=>setImageUrl(e.target.value)}/>
 
         <button className="add-btn" onClick={upload}>
           Add Product

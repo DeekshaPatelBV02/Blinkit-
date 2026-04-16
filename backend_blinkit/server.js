@@ -198,7 +198,7 @@ app.get("/products", async (req, res) => {
 });
 
 /* UPLOAD PRODUCT */
-app.post("/upload", upload.single("file"), async (req, res) => {
+/*app.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const product = new ProductModel({
       name: req.body.name,
@@ -206,6 +206,22 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       category: req.body.category,
       description: req.body.description,
       file: req.file ? req.file.filename : null
+    });
+
+    await product.save();
+    res.json({ message: "Product uploaded" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});*/
+app.post("/upload",async (req, res) => {
+  try {
+    const product = new ProductModel({
+      name: req.body.name,
+      price: req.body.price,
+      category: req.body.category,
+      description: req.body.description,
+      imageUrl: req.body.imageUrl,
     });
 
     await product.save();
