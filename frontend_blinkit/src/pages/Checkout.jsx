@@ -5,7 +5,7 @@ import { totalItem, totalPrice } from "../Features/CartReducer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/checkout.css";
-import { sendEmail } from "../utils/sendEmail";
+
 
 function Checkout() {
   const { cart = [], dispatch } = useContext(CartContext);
@@ -109,13 +109,6 @@ function Checkout() {
       await axios.post("https://blinkit-2-yemv.onrender.com/orders/add", orderData);
 
     
-      await sendEmail({
-        name: form.fullName,
-        email: form.email,
-        amount: totalPrice(cart),
-        payment: mode,
-      });
-
       alert("Order Placed Successfully");
 
       dispatch({ type: "CLEAR_CART" });
