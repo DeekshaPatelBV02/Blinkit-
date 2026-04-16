@@ -250,7 +250,7 @@ app.get("/orders", async (req, res) => {
   }
 });
 
-app.post("/orders/add", placeOrder);
+app.post("/orders/add/payment", placeOrder);
 
 /* UPDATE STATUS */
 app.put("/orders/:id", status);
