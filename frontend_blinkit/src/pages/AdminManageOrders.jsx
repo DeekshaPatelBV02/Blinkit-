@@ -1,29 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
 import "../styles/AdminManageOrder.css";
+import { sendStatusEmail } from "../utils/sendStatusEmail";
 
 function AdminManageOrders() {
   const [orders, setOrders] = useState([]);
   const statusList = ["Shipped", "Delivered", "Cancelled"];
 
-
-  async function orderStatus(id, e) {
-    try {
-      let status = e.target.value;
-
-      await axios.put(`https://blinkit-2-yemv.onrender.com/orders/${id}`, { status })
-
-      getOrders(); 
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-
   const getOrders = () => {
     axios
-      .get(`https://blinkit-2-yemv.onrender.com/orders`)
+      .get("https://blinkit-2-yemv.onrender.com/orders")
       .then((res) => {
         setOrders(res.data);
       })
@@ -34,7 +20,36 @@ function AdminManageOrders() {
     getOrders();
   }, []);
 
-  
+  async function orderStatus(order, e) {
+    try {
+      const status = e.target.value;
+
+      
+      await axios.put(
+        `https://blinkit-2-yemv.onrender.com/orders/${order._id}`,
+        { status }
+      );
+
+      
+      if (order.user?.email) {
+        await sendStatusEmail({
+          to_email: order.user.email,
+          customer_name: order.user.fullName || "Customer",
+          order_id: order._id,
+          order_status: status,
+          payment_method: order.user?.payment || "N/A",
+          address: order.user?.address || "N/A",
+        });
+      }
+
+      alert(`Order status updated to ${status}`);
+      getOrders();
+    } catch (err) {
+      console.log(err);
+      alert("Failed to update status or send email");
+    }
+  }
+
   const deleteOrder = (id) => {
     axios
       .delete(`https://blinkit-2-yemv.onrender.com/orders/${id}`)
@@ -68,7 +83,6 @@ function AdminManageOrders() {
             <tr key={order._id}>
               <td>{order._id}</td>
 
-              
               <td>
                 {order.products?.length > 0 ? (
                   order.products.map((item, i) => (
@@ -76,29 +90,27 @@ function AdminManageOrders() {
                       {item.name} (₹{item.price} × {item.quantity})
                     </p>
                   ))
-                ) : ("No items")}
+                ) : (
+                  "No items"
+                )}
               </td>
 
-            
               <td>₹{order.totalPrice}</td>
 
-              
               <td>
-                {order.createdAt? new Date(order.createdAt).toLocaleString():"N/A"}
+                {order.createdAt
+                  ? new Date(order.createdAt).toLocaleString()
+                  : "N/A"}
               </td>
 
-             
               <td>{order.user?.address || "N/A"}</td>
-
-              
               <td>{order.user?.payment || "N/A"}</td>
 
-            
               <td>
                 <select
                   className="form-control"
                   value={order.status || ""}
-                  onChange={(e) => orderStatus(order._id, e)}
+                  onChange={(e) => orderStatus(order, e)}
                 >
                   <option value="" disabled>
                     Select Status
@@ -112,11 +124,8 @@ function AdminManageOrders() {
                 </select>
               </td>
 
-              
               <td>
-                <button onClick={() => deleteOrder(order._id)}>
-                  Delete
-                </button>
+                <button onClick={() => deleteOrder(order._id)}>Delete</button>
               </td>
             </tr>
           ))}
@@ -126,4 +135,3 @@ function AdminManageOrders() {
   );
 }
 
-export default AdminManageOrders;
