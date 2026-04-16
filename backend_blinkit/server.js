@@ -162,6 +162,51 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   }
 });
 
+app.put("/products/:id", upload.single("file"), async (req, res) => {
+  try {
+    const { name, price, category, description } = req.body;
+
+    let updateData = {
+      name,
+      price,
+      category,
+      description,
+    };
+
+    if (req.file) {
+      updateData.file = req.file.filename;
+    }
+
+    const updatedProduct = await ProductModel.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json({
+      message: "Product updated successfully",
+      product: updatedProduct
+    });
+
+  } catch (err) {
+    console.log("Update error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete("/products/:id", async (req, res) => {
+  try {
+    await ProductModel.findByIdAndDelete(req.params.id);
+    res.json({ message: "Product deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 /* CATEGORIES */
 app.get("/getCategories", async (req, res) => {
   try {
