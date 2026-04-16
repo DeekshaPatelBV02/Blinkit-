@@ -1,5 +1,5 @@
 const OrderModel = require("../models/order");
-const sendMail = require("./sendEmail");
+/*const sendMail = require("./sendEmail");*/
 
 exports.placeOrder = async (req, res) => {
   try {
@@ -27,13 +27,13 @@ exports.placeOrder = async (req, res) => {
     await newOrder.save();
 
    
-    const message = `
+    /*const message = `
       <h2>Order Confirmed</h2>
       <p>Hello ${orderData.user.fullName},</p>
       <p>Your order has been placed successfully.</p>
       <p>Items: ${orderData.products.map(p => p.name).join(", ")}</p>
       <p>Total: ₹${orderData.totalPrice}</p>
-    `;
+    `;*/
 
     await sendMail(orderData.user.email, "Order Placed Successfully.", message);
 

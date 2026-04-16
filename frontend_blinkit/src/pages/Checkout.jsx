@@ -106,15 +106,15 @@ function Checkout() {
         paymentId,
       };
 
-      await axios.post("https://blinkit-2-yemv.onrender.com/orders/add/payment", orderData);
+      await axios.post("https://blinkit-2-yemv.onrender.com/orders/add", orderData);
 
     
-      /*await sendEmail({
+      await sendEmail({
         name: form.fullName,
         email: form.email,
         amount: totalPrice(cart),
         payment: mode,
-      });*/
+      });
 
       alert("Order Placed Successfully");
 
