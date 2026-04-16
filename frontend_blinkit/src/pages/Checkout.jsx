@@ -5,7 +5,7 @@ import { totalItem, totalPrice } from "../Features/CartReducer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/checkout.css";
-import { sendOtpEmail } from "../utils/sendOtp";
+import { sendEmail } from "../utils/sendEmail";
 
 function Checkout() {
   const { cart = [], dispatch } = useContext(CartContext);
