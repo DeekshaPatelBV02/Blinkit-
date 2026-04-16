@@ -1,10 +1,11 @@
 const OrderModel = require("../models/order");
-
+const sendMail = require("./sendEmail"); // adjust path if needed
 
 exports.placeOrder = async (req, res) => {
   try {
     const orderData = req.body;
-     console.log(" Saving order:", orderData.user);
+    console.log("Saving order:", orderData.user);
+
     if (!orderData.user || !orderData.user.email) {
       return res.status(400).json({ message: "User email required" });
     }
@@ -26,13 +27,29 @@ exports.placeOrder = async (req, res) => {
 
     await newOrder.save();
 
-   
-   
-    await sendMail(orderData.user.email, "Order Placed Successfully.", message);
+    const message = `
+      <h2>Order Placed Successfully</h2>
+      <p>Hello ${orderData.user.fullName},</p>
+      <p>Your order has been placed successfully.</p>
+      <p><b>Payment:</b> ${orderData.user.payment}</p>
+      <p><b>Address:</b> ${orderData.user.address}</p>
+      <p><b>Total Items:</b> ${orderData.totalItems}</p>
+      <p><b>Total Price:</b> ₹${orderData.totalPrice}</p>
+    `;
+
+    try {
+      await sendMail(
+        orderData.user.email,
+        "Order Placed Successfully",
+        message
+      );
+    } catch (mailError) {
+      console.log("Email sending failed:", mailError);
+    }
 
     res.status(200).json({
       success: true,
-      message: "Order placed & email sent"
+      message: "Order placed successfully"
     });
 
   } catch (error) {
