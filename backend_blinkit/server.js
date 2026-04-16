@@ -23,10 +23,8 @@ const crypto = require("crypto");
 const app = express();
 
 /* MIDDLEWARE */
-
-
 app.use(cors({
-  origin: true,   
+  origin: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -34,13 +32,12 @@ app.use(cors({
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "public/Images")));
 
-/* ROOT ROUTE (IMPORTANT FOR DEPLOY) */
+/* ROOT ROUTE */
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
 /* MONGODB */
-
 async function connectDB() {
   try {
     if (!process.env.MONGO_URL) {
@@ -55,7 +52,6 @@ async function connectDB() {
 
     console.log("MongoDB Connected");
     console.log("DB Name:", mongoose.connection.name);
-
   } catch (err) {
     console.error("MongoDB ERROR:");
     console.error(err);
@@ -105,6 +101,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
+/* GET ALL USERS */
 app.get("/users", async (req, res) => {
   try {
     const users = await RegisterModel.find();
@@ -114,9 +111,66 @@ app.get("/users", async (req, res) => {
   }
 });
 
+/* GET SINGLE USER */
+app.get("/users/:id", async (req, res) => {
+  try {
+    const user = await RegisterModel.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* UPDATE USER */
+app.put("/users/:id", async (req, res) => {
+  try {
+    const { name, phone, email, password } = req.body;
+
+    const updatedUser = await RegisterModel.findByIdAndUpdate(
+      req.params.id,
+      { name, phone, email, password },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "User updated successfully",
+      user: updatedUser
+    });
+  } catch (err) {
+    console.log("UPDATE USER ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* DELETE USER */
+app.delete("/users/:id", async (req, res) => {
+  try {
+    const deletedUser = await RegisterModel.findByIdAndDelete(req.params.id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    console.log("DELETE USER ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 /* OTP */
 app.post("/sendOtp", sendOtp);
 app.post("/verifyOtp", verifyOtp);
+
 app.post("/getUserByMobile", async (req, res) => {
   try {
     const { mobile } = req.body;
@@ -128,7 +182,6 @@ app.post("/getUserByMobile", async (req, res) => {
     }
 
     res.json({ email: user.email });
-
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
@@ -162,6 +215,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   }
 });
 
+/* UPDATE PRODUCT */
 app.put("/products/:id", upload.single("file"), async (req, res) => {
   try {
     const { name, price, category, description } = req.body;
@@ -170,7 +224,7 @@ app.put("/products/:id", upload.single("file"), async (req, res) => {
       name,
       price,
       category,
-      description,
+      description
     };
 
     if (req.file) {
@@ -191,16 +245,21 @@ app.put("/products/:id", upload.single("file"), async (req, res) => {
       message: "Product updated successfully",
       product: updatedProduct
     });
-
   } catch (err) {
     console.log("Update error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
+/* DELETE PRODUCT */
 app.delete("/products/:id", async (req, res) => {
   try {
-    await ProductModel.findByIdAndDelete(req.params.id);
+    const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
+
+    if (!deletedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
     res.json({ message: "Product deleted" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -254,7 +313,7 @@ app.get("/products/:id", async (req, res) => {
   }
 });
 
-/* CART (single cart system as per your logic) */
+/* CART */
 app.post("/addCart", async (req, res) => {
   try {
     const { cart } = req.body;
@@ -303,7 +362,12 @@ app.put("/orders/:id", status);
 /* DELETE ORDER */
 app.delete("/orders/:id", async (req, res) => {
   try {
-    await OrderModel.findByIdAndDelete(req.params.id);
+    const deletedOrder = await OrderModel.findByIdAndDelete(req.params.id);
+
+    if (!deletedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
     res.json({ message: "Order deleted" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -319,7 +383,7 @@ app.post("/create-order", async (req, res) => {
     });
 
     const options = {
-      amount: req.body.amount, 
+      amount: req.body.amount,
       currency: req.body.currency || "INR",
       receipt: "receipt_" + Date.now()
     };
@@ -354,7 +418,10 @@ app.post("/verify-payment", (req, res) => {
     if (generated === razorpay_signature) {
       return res.json({ success: true, message: "Payment verified" });
     } else {
-      return res.status(400).json({ success: false, message: "Invalid signature" });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid signature"
+      });
     }
   } catch (err) {
     console.log("Verify payment error:", err);
