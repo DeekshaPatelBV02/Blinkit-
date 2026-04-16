@@ -44,7 +44,7 @@ exports.sendOtp = async (req, res) => {
       success: true,
       message: "OTP generated",
       mobile,
-      otp   // 👈 send OTP to frontend
+      otp  
     });
 
   } catch (error) {
@@ -90,7 +90,7 @@ exports.verifyOtp = async (req, res) => {
       });
     }
 
-    // ✅ correct clearing
+    
     user.otp = null;
     user.otpExpiry = null;
     await user.save();

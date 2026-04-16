@@ -26,7 +26,7 @@ const app = express();
 
 
 app.use(cors({
-  origin: true,   // ✅ allow all Vercel domains automatically
+  origin: true,   
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -40,7 +40,7 @@ app.get("/", (req, res) => {
 });
 
 /* MONGODB */
-/* MONGODB (FIXED) */
+
 async function connectDB() {
   try {
     if (!process.env.MONGO_URL) {
@@ -274,8 +274,8 @@ app.post("/create-order", async (req, res) => {
     });
 
     const options = {
-      amount: req.body.amount,
-      currency: req.body.currency,
+      amount: req.body.amount, 
+      currency: req.body.currency || "INR",
       receipt: "receipt_" + Date.now()
     };
 
@@ -295,15 +295,24 @@ app.post("/create-order", async (req, res) => {
 /* VERIFY PAYMENT */
 app.post("/verify-payment", (req, res) => {
   try {
-    const { order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature
+    } = req.body;
 
     const generated = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(order_id + "|" + razorpay_payment_id)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex");
 
-    res.json({ success: generated === razorpay_signature });
+    if (generated === razorpay_signature) {
+      return res.json({ success: true, message: "Payment verified" });
+    } else {
+      return res.status(400).json({ success: false, message: "Invalid signature" });
+    }
   } catch (err) {
+    console.log("Verify payment error:", err);
     res.status(500).json({ error: err.message });
   }
 });
