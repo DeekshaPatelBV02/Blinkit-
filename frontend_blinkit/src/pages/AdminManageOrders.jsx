@@ -5,15 +5,15 @@ import { sendStatusEmail } from "../utils/sendStatusEmail";
 
 function AdminManageOrders() {
   const [orders, setOrders] = useState([]);
-  const statusList = ["Shipped", "Delivered", "Cancelled"];
+  const statusList = ["Pending", "Shipped", "Delivered", "Cancelled"];
 
-  const getOrders = () => {
-    axios
-      .get("https://blinkit-2-yemv.onrender.com/orders")
-      .then((res) => {
-        setOrders(res.data);
-      })
-      .catch((err) => console.log(err));
+  const getOrders = async () => {
+    try {
+      const res = await axios.get("https://blinkit-2-yemv.onrender.com/orders");
+      setOrders(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -24,13 +24,11 @@ function AdminManageOrders() {
     try {
       const status = e.target.value;
 
-      
       await axios.put(
         `https://blinkit-2-yemv.onrender.com/orders/${order._id}`,
         { status }
       );
 
-      
       if (order.user?.email) {
         await sendStatusEmail({
           to_email: order.user.email,
@@ -50,14 +48,14 @@ function AdminManageOrders() {
     }
   }
 
-  const deleteOrder = (id) => {
-    axios
-      .delete(`https://blinkit-2-yemv.onrender.com/orders/${id}`)
-      .then(() => {
-        alert("Order Deleted");
-        getOrders();
-      })
-      .catch((err) => console.log(err));
+  const deleteOrder = async (id) => {
+    try {
+      await axios.delete(`https://blinkit-2-yemv.onrender.com/orders/${id}`);
+      alert("Order Deleted");
+      getOrders();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -109,13 +107,9 @@ function AdminManageOrders() {
               <td>
                 <select
                   className="form-control"
-                  value={order.status || ""}
+                  value={order.status || "Pending"}
                   onChange={(e) => orderStatus(order, e)}
                 >
-                  <option value="" disabled>
-                    Select Status
-                  </option>
-
                   {statusList.map((s, index) => (
                     <option key={index} value={s}>
                       {s}
@@ -135,3 +129,4 @@ function AdminManageOrders() {
   );
 }
 
+export default AdminManageOrders;
