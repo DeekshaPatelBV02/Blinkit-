@@ -55,22 +55,27 @@ function Checkout() {
         order_id: data.id,
 
         handler: async (response) => {
-          try {
-            const verify = await axios.post(
-              "https://blinkit-2-yemv.onrender.com/verify-payment",
-              response
-            );
+  try {
+    const verify = await axios.post(
+      "https://blinkit-2-yemv.onrender.com/verify-payment",
+      {
+        order_id: data.id,
+        razorpay_order_id: response.razorpay_order_id,
+        razorpay_payment_id: response.razorpay_payment_id,
+        razorpay_signature: response.razorpay_signature,
+      }
+    );
 
-            if (verify.data.success) {
-              await placeOrder("Online", response.razorpay_payment_id);
-            } else {
-              alert("Payment failed");
-            }
-          } catch (error) {
-            console.log("Verification error:", error);
-            alert("Verification failed");
-          }
-        },
+    if (verify.data.success) {
+      await placeOrder("Online", response.razorpay_payment_id);
+    } else {
+      alert("Payment failed");
+    }
+  } catch (error) {
+    console.log("Verification error:", error);
+    alert("Verification failed");
+  }
+},
 
         prefill: {
           name: form.fullName,

@@ -276,8 +276,7 @@ app.post("/create-order", async (req, res) => {
     const options = {
       amount: req.body.amount,
       currency: req.body.currency,
-      receipt: "receipt#1",
-      payment_capture: 1
+      receipt: "receipt_" + Date.now()
     };
 
     const response = await razorpay.orders.create(options);
@@ -287,8 +286,8 @@ app.post("/create-order", async (req, res) => {
       currency: response.currency,
       amount: response.amount
     });
-
   } catch (err) {
+    console.log("Create order error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -296,11 +295,11 @@ app.post("/create-order", async (req, res) => {
 /* VERIFY PAYMENT */
 app.post("/verify-payment", (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const { order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
     const generated = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(razorpay_order_id + "|" + razorpay_payment_id)
+      .update(order_id + "|" + razorpay_payment_id)
       .digest("hex");
 
     res.json({ success: generated === razorpay_signature });
