@@ -190,19 +190,24 @@ app.post("/getUserByMobile", async (req, res) => {
 /* ADD PRODUCT */
 app.post("/upload", async (req, res) => {
   try {
-    const product = new ProductModel({
+    console.log("BODY:", req.body);
+
+    const newProduct = new ProductModel({
       name: req.body.name,
       price: req.body.price,
       category: req.body.category,
       description: req.body.description,
-      imageUrl: req.body.imageUrl
+      rating: req.body.rating,
+      imageUrl: req.body.imageUrl,
     });
 
-    await product.save();
-    res.json({ message: "Product uploaded successfully", product });
-  } catch (err) {
-    console.log("Upload error:", err);
-    res.status(500).json({ error: err.message });
+    await newProduct.save();
+
+    res.json({ message: "Product added successfully" });
+
+  } catch (error) {
+    console.log("UPLOAD ERROR:", error);
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -250,47 +255,29 @@ app.get("/products/category/:category", async (req, res) => {
 /* UPDATE PRODUCT */
 app.put("/products/:id", async (req, res) => {
   try {
-    const { name, price, category, description, imageUrl } = req.body;
+    const { name, price, category, description,imageUrl } = req.body;
 
-    const updatedProduct = await ProductModel.findByIdAndUpdate(
-      req.params.id,
-      {
-        name,
-        price,
-        category,
-        description,
-        imageUrl
-      },
-      { new: true }
-    );
-
-    if (!updatedProduct) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    res.json({
-      message: "Product updated successfully",
-      product: updatedProduct
+    await ProductModel.findByIdAndUpdate(req.params.id, {
+      name,
+      price,
+      category,
+      description,
+      imageUrl,
     });
+
+    res.json({ message: "Product updated" });
+
   } catch (err) {
-    console.log("Update error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Cannot update product" });
   }
 });
-
 /* DELETE PRODUCT */
 app.delete("/products/:id", async (req, res) => {
   try {
-    const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
-
-    if (!deletedProduct) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    res.json({ message: "Product deleted successfully" });
+    await ProductModel.findByIdAndDelete(req.params.id);
+    res.json({ message: "Product deleted" });
   } catch (err) {
-    console.log("Delete error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Cannot delete product" });
   }
 });
 
