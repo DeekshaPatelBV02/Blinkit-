@@ -24,16 +24,6 @@ function ProductsPage() {
     }
   };
 
-  const getImageSrc = (product) => {
-    if (product.imageUrl) {
-      return product.imageUrl;
-    }
-    if (product.file) {
-      return `https://blinkit-2-yemv.onrender.com/images/${product.file}`;
-    }
-    return "https://via.placeholder.com/200";
-  };
-
   return (
     <div className="product-page">
       <h2 className="product-title">{category} products</h2>
@@ -41,11 +31,16 @@ function ProductsPage() {
       <div className="product">
         {products.map((p) => (
           <div className="single-product" key={p._id}>
-            <img
-              src={getImageSrc(p)}
-              alt={p.name}
-              onClick={() => navigate(`/product/${p._id}`)}
-            />
+            
+            {p.imageUrl ? (
+              <img
+                src={p.imageUrl}
+                alt={p.name}
+                onClick={() => navigate(`/product/${p._id}`)}
+              />
+            ) : (
+              <div>No Image</div>
+            )}
 
             <p className="product-name">{p.name}</p>
             <p className="product-price">₹{p.price}</p>
@@ -57,6 +52,7 @@ function ProductsPage() {
             >
               Add
             </button>
+
           </div>
         ))}
       </div>

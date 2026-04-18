@@ -26,16 +26,6 @@ function SingleProduct() {
     }
   };
 
-  const getImageSrc = (product) => {
-    if (product.imageUrl) {
-      return product.imageUrl;
-    }
-    if (product.file) {
-      return `https://blinkit-2-yemv.onrender.com/images/${product.file}`;
-    }
-    return "https://via.placeholder.com/300";
-  };
-
   if (!product) return <h2>Loading...</h2>;
 
   return (
@@ -43,7 +33,11 @@ function SingleProduct() {
       <Header />
       <div className="single-product-page">
         <div className="single-image">
-          <img src={getImageSrc(product)} alt={product.name} />
+          {product.imageUrl ? (
+            <img src={product.imageUrl} alt={product.name} />
+          ) : (
+            <div>No Image</div>
+          )}
         </div>
 
         <div className="information">
@@ -60,7 +54,6 @@ function SingleProduct() {
                   _id: product._id,
                   name: product.name,
                   price: product.price,
-                  file: product.file || "",
                   imageUrl: product.imageUrl || "",
                   category: product.category,
                   description: product.description,

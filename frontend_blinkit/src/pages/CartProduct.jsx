@@ -19,13 +19,21 @@ const CartProduct = ({ product }) => {
     }
   };
 
+  const getImageSrc = (product) => {
+    if (product.imageUrl) {
+      return product.imageUrl;
+    }
+    return "";
+  };
+
   return (
     <div className="contain">
       <div className="CartProduct">
-        <img
-          src={product.imageUrl || "https://via.placeholder.com/150"}
-          alt={product.name}
-        />
+        {product.imageUrl ? (
+          <img src={getImageSrc(product)} alt={product.name} />
+        ) : (
+          <div>No Image</div>
+        )}
 
         <div className="detail">
           <h4>{product.name}</h4>
@@ -39,9 +47,7 @@ const CartProduct = ({ product }) => {
               <b>-</b>
             </button>
 
-            <button className="rounded-circle2">
-              {product.quantity}
-            </button>
+            <button className="rounded-circle2">{product.quantity}</button>
 
             <button
               className="rounded-circle3"
