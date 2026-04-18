@@ -28,3 +28,4 @@ async function sendMail(to, subject, html) {
     console.log("Email sending failed:", error.message);
   }
 }
+module.exports = sendEmail;
