@@ -26,6 +26,16 @@ function SingleProduct() {
     }
   };
 
+  const getImageSrc = (product) => {
+    if (product.imageUrl) {
+      return product.imageUrl;
+    }
+    if (product.file) {
+      return `https://blinkit-2-yemv.onrender.com/images/${product.file}`;
+    }
+    return "https://via.placeholder.com/300";
+  };
+
   if (!product) return <h2>Loading...</h2>;
 
   return (
@@ -33,16 +43,14 @@ function SingleProduct() {
       <Header />
       <div className="single-product-page">
         <div className="single-image">
-          <img
-            src={`https://blinkit-2-yemv.onrender.com/images/${product.file}`}
-            alt={product.name}
-          />
+          <img src={getImageSrc(product)} alt={product.name} />
         </div>
 
         <div className="information">
           <h2>{product.name}</h2>
           <p className="price">₹{product.price}</p>
           <p>{product.description}</p>
+
           <button
             className="buy-btn"
             onClick={() =>
@@ -52,7 +60,10 @@ function SingleProduct() {
                   _id: product._id,
                   name: product.name,
                   price: product.price,
-                  file: product.file,
+                  file: product.file || "",
+                  imageUrl: product.imageUrl || "",
+                  category: product.category,
+                  description: product.description,
                 },
               })
             }

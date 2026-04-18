@@ -21,8 +21,16 @@ function EditProduct() {
 
   const getProduct = async () => {
     try {
-      const res = await axios.get(`https://blinkit-2-yemv.onrender.com/products/${id}`);
-      setProduct(res.data);
+      const res = await axios.get(
+        `https://blinkit-2-yemv.onrender.com/products/${id}`
+      );
+      setProduct({
+        name: res.data.name || "",
+        price: res.data.price || "",
+        category: res.data.category || "",
+        description: res.data.description || "",
+        imageUrl: res.data.imageUrl || ""
+      });
     } catch (error) {
       console.log(error);
     }

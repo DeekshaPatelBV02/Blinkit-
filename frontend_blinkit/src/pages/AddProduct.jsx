@@ -24,7 +24,7 @@ function AddProduct() {
         price,
         category,
         description,
-        imageUrl,
+        imageUrl
       });
 
       alert("Product Added Successfully");
@@ -60,7 +60,7 @@ function AddProduct() {
 
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">Select Category</option>
-          <option value="pan">Pan</option>
+          <option value="Pan">Pan</option>
           <option value="Vegetables">Vegetables</option>
           <option value="Dairy">Dairy</option>
           <option value="Snacks">Snacks</option>
@@ -76,7 +76,7 @@ function AddProduct() {
           <option value="Organic">Organic</option>
           <option value="Baby Care">Baby Care</option>
           <option value="Pharma">Pharma</option>
-          <option value="CLeaning">Cleaning</option>
+          <option value="Cleaning">Cleaning</option>
           <option value="Home">Home</option>
           <option value="Personal Care">Personal Care</option>
           <option value="Pet Care">Pet Care</option>

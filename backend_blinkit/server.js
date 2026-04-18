@@ -187,46 +187,62 @@ app.post("/getUserByMobile", async (req, res) => {
   }
 });
 
-/* PRODUCTS */
+/* ADD PRODUCT */
+app.post("/upload", async (req, res) => {
+  try {
+    const product = new ProductModel({
+      name: req.body.name,
+      price: req.body.price,
+      category: req.body.category,
+      description: req.body.description,
+      imageUrl: req.body.imageUrl
+    });
+
+    await product.save();
+    res.json({ message: "Product uploaded successfully", product });
+  } catch (err) {
+    console.log("Upload error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* GET ALL PRODUCTS */
 app.get("/products", async (req, res) => {
   try {
     const products = await ProductModel.find();
     res.json(products);
   } catch (err) {
+    console.log("Get products error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-/* UPLOAD PRODUCT */
-/*app.post("/upload", upload.single("file"), async (req, res) => {
+/* GET SINGLE PRODUCT */
+app.get("/products/:id", async (req, res) => {
   try {
-    const product = new ProductModel({
-      name: req.body.name,
-      price: req.body.price,
-      category: req.body.category,
-      description: req.body.description,
-      file: req.file ? req.file.filename : null
-    });
+    const product = await ProductModel.findById(req.params.id);
 
-    await product.save();
-    res.json({ message: "Product uploaded" });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json(product);
   } catch (err) {
+    console.log("Get single product error:", err);
     res.status(500).json({ error: err.message });
   }
-});*/
-app.post("/upload",async (req, res) => {
+});
+
+/* GET PRODUCTS BY CATEGORY */
+app.get("/products/category/:category", async (req, res) => {
   try {
-    const product = new ProductModel({
-      name: req.body.name,
-      price: req.body.price,
-      category: req.body.category,
-      description: req.body.description,
-      imageUrl: req.body.imageUrl,
+    const products = await ProductModel.find({
+      category: req.params.category
     });
 
-    await product.save();
-    res.json({ message: "Product uploaded" });
+    res.json(products);
   } catch (err) {
+    console.log("Category products error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -236,17 +252,15 @@ app.put("/products/:id", async (req, res) => {
   try {
     const { name, price, category, description, imageUrl } = req.body;
 
-    const updateData = {
-      name,
-      price,
-      category,
-      description,
-      imageUrl
-    };
-
     const updatedProduct = await ProductModel.findByIdAndUpdate(
       req.params.id,
-      updateData,
+      {
+        name,
+        price,
+        category,
+        description,
+        imageUrl
+      },
       { new: true }
     );
 
@@ -273,21 +287,14 @@ app.delete("/products/:id", async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    res.json({ message: "Product deleted" });
+    res.json({ message: "Product deleted successfully" });
   } catch (err) {
+    console.log("Delete error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-/* CATEGORIES */
-app.get("/getCategories", async (req, res) => {
-  try {
-    const categories = await CategoryModel.find();
-    res.json(categories);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+
 
 /* SERVICES */
 app.get("/getServices", async (req, res) => {
@@ -299,32 +306,7 @@ app.get("/getServices", async (req, res) => {
   }
 });
 
-/* PRODUCTS BY CATEGORY */
-app.get("/products/category/:category", async (req, res) => {
-  try {
-    const products = await ProductModel.find({
-      category: req.params.category
-    });
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
-/* SINGLE PRODUCT */
-app.get("/products/:id", async (req, res) => {
-  try {
-    const product = await ProductModel.findById(req.params.id);
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    res.json(product);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
 /* CART */
 app.post("/addCart", async (req, res) => {

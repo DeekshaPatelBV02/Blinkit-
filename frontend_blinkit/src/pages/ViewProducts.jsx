@@ -4,7 +4,6 @@ import axios from "axios";
 import "../styles/ViewProducts.css";
 
 function ViewProducts() {
-
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
@@ -19,6 +18,16 @@ function ViewProducts() {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const getImageSrc = (product) => {
+    if (product.imageUrl) {
+      return product.imageUrl;
+    }
+    if (product.file) {
+      return `https://blinkit-2-yemv.onrender.com/images/${product.file}`;
+    }
+    return "https://via.placeholder.com/150";
   };
 
   if (products.length === 0) {
@@ -40,9 +49,10 @@ function ViewProducts() {
         {products.map((product) => (
           <div key={product._id} className="product-card">
             <img
-              src={`https://blinkit-2-yemv.onrender.com/images/${product.file}`}
+              src={getImageSrc(product)}
               alt={product.name}
-              className="product-image"/>
+              className="product-image"
+            />
             <h4>{product.name}</h4>
             <p className="price">₹{product.price}</p>
             <h4>{product.category}</h4>
@@ -50,7 +60,10 @@ function ViewProducts() {
         ))}
       </div>
 
-      <button className="back-btn"onClick={() => navigate("/admin/add-product")}>
+      <button
+        className="back-btn"
+        onClick={() => navigate("/admin/add-product")}
+      >
         Add More Products
       </button>
     </div>
