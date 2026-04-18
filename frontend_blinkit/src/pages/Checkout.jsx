@@ -49,7 +49,7 @@ function Checkout() {
       );
 
       const options = {
-        key: "rzp_test_SYBkOch7KPkXkK",
+        key: import.meta.env.VITE_RAZORPAY_ID,
         amount: data.amount,
         currency: data.currency,
         order_id: data.id,
