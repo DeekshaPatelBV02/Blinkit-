@@ -20,16 +20,6 @@ function ViewProducts() {
     }
   };
 
-  const getImageSrc = (product) => {
-    if (product.imageUrl) {
-      return product.imageUrl;
-    }
-    if (product.file) {
-      return `https://blinkit-2-yemv.onrender.com/images/${product.file}`;
-    }
-    return "https://via.placeholder.com/150";
-  };
-
   if (products.length === 0) {
     return (
       <div className="empty">
@@ -48,11 +38,16 @@ function ViewProducts() {
       <div className="product-grid">
         {products.map((product) => (
           <div key={product._id} className="product-card">
-            <img
-              src={getImageSrc(product)}
-              alt={product.name}
-              className="product-image"
-            />
+            {product.imageUrl ? (
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="product-image"
+              />
+            ) : (
+              <div>No Image</div>
+            )}
+
             <h4>{product.name}</h4>
             <p className="price">₹{product.price}</p>
             <h4>{product.category}</h4>
