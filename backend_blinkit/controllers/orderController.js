@@ -1,10 +1,10 @@
 const OrderModel = require("../models/order");
+const sendMail = require("./sendEmail");
 
 exports.placeOrder = async (req, res) => {
   try {
     const orderData = req.body;
-    console.log("Saving order:", orderData.user);
-
+     console.log(" Saving order:", orderData.user);
     if (!orderData.user || !orderData.user.email) {
       return res.status(400).json({ message: "User email required" });
     }
@@ -13,6 +13,7 @@ exports.placeOrder = async (req, res) => {
       return res.status(400).json({ message: "Products required" });
     }
 
+    //  to save the order that is ordered by the user.
     const newOrder = new OrderModel({
       ...orderData,
       user: {
@@ -26,9 +27,20 @@ exports.placeOrder = async (req, res) => {
 
     await newOrder.save();
 
+    // when the user will order the item the order conformation message will go to the user mail so this logic work for the email.
+    const message = `
+      <h2>Order Confirmed</h2>
+      <p>Hello ${orderData.user.fullName},</p>
+      <p>Your order has been placed successfully.</p>
+      <p>Items: ${orderData.products.map(p => p.name).join(", ")}</p>
+      <p>Total: ₹${orderData.totalPrice}</p>
+    `;
+
+    await sendMail(orderData.user.email, "Order Placed Successfully.", message);
+
     res.status(200).json({
       success: true,
-      message: "Order placed successfully"
+      message: "Order placed & email sent"
     });
 
   } catch (error) {
@@ -40,4 +52,4 @@ exports.placeOrder = async (req, res) => {
       error: error.message
     });
   }
-};
+}; 
