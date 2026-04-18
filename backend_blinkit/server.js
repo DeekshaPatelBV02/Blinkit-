@@ -232,20 +232,17 @@ app.post("/upload",async (req, res) => {
 });
 
 /* UPDATE PRODUCT */
-app.put("/products/:id", upload.single("file"), async (req, res) => {
+app.put("/products/:id", async (req, res) => {
   try {
-    const { name, price, category, description } = req.body;
+    const { name, price, category, description, imageUrl } = req.body;
 
-    let updateData = {
+    const updateData = {
       name,
       price,
       category,
-      description
+      description,
+      imageUrl
     };
-
-    if (req.file) {
-      updateData.file = req.file.filename;
-    }
 
     const updatedProduct = await ProductModel.findByIdAndUpdate(
       req.params.id,

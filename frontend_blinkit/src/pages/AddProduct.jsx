@@ -4,34 +4,28 @@ import "../styles/addProduct.css";
 import axios from "axios";
 
 function AddProduct() {
-
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  /*const [file, setFile] = useState(null);*/
-  const [imageUrl,setImageUrl]=useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
   const navigate = useNavigate();
 
   const upload = async () => {
-
     if (!name || !price || !category || !description || !imageUrl) {
       alert("Please fill all fields");
       return;
     }
 
-    const formData = new FormData();
-
-    formData.append("name", name);
-    formData.append("price", price);
-    formData.append("category", category);
-    formData.append("description", description);
-    formData.append("file", file);
-
     try {
-
-      await axios.post("https://blinkit-2-yemv.onrender.com/upload", formData);
+      await axios.post("https://blinkit-2-yemv.onrender.com/upload", {
+        name,
+        price,
+        category,
+        description,
+        imageUrl,
+      });
 
       alert("Product Added Successfully");
 
@@ -40,8 +34,6 @@ function AddProduct() {
       setCategory("");
       setDescription("");
       setImageUrl("");
-      /*setFile(null);*/
-
     } catch (err) {
       console.log(err);
     }
@@ -52,7 +44,6 @@ function AddProduct() {
       <h2 className="add">Add Product</h2>
 
       <div className="form">
-
         <input
           type="text"
           placeholder="Product Name"
@@ -67,10 +58,7 @@ function AddProduct() {
           onChange={(e) => setPrice(e.target.value)}
         />
 
-      
-
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
-         
           <option value="">Select Category</option>
           <option value="pan">Pan</option>
           <option value="Vegetables">Vegetables</option>
@@ -94,29 +82,31 @@ function AddProduct() {
           <option value="Pet Care">Pet Care</option>
         </select>
 
-        <textarea 
+        <textarea
           className="description-box"
           placeholder="Enter Product Description"
           value={description}
-          onChange={(e)=> setDescription(e.target.value)}></textarea>
+          onChange={(e) => setDescription(e.target.value)}
+        ></textarea>
 
-       
         <input
           type="text"
           placeholder="Add image url"
           value={imageUrl}
-          onChange={(e)=>setImageUrl(e.target.value)}/>
+          onChange={(e) => setImageUrl(e.target.value)}
+        />
 
         <button className="add-btn" onClick={upload}>
           Add Product
         </button>
-
       </div>
 
-      <button className="view-btn"onClick={() => navigate("/admin/view-product")}>
+      <button
+        className="view-btn"
+        onClick={() => navigate("/admin/view-product")}
+      >
         View Products
       </button>
-
     </div>
   );
 }

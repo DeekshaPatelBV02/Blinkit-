@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import "../styles/editProduct.css";
 
 function EditProduct() {
-
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -12,10 +11,9 @@ function EditProduct() {
     name: "",
     price: "",
     category: "",
-    description: ""
+    description: "",
+    imageUrl: ""
   });
-
-  const [file, setFile] = useState(null);
 
   useEffect(() => {
     getProduct();
@@ -40,18 +38,15 @@ function EditProduct() {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", product.name);
-    formData.append("price", product.price);
-    formData.append("category", product.category);
-    formData.append("description", product.description);
-
-    if (file) {
-      formData.append("file", file);
-    }
-
     try {
-      await axios.put(`https://blinkit-2-yemv.onrender.com/products/${id}`, formData);
+      await axios.put(`https://blinkit-2-yemv.onrender.com/products/${id}`, {
+        name: product.name,
+        price: product.price,
+        category: product.category,
+        description: product.description,
+        imageUrl: product.imageUrl
+      });
+
       alert("Product Updated Successfully");
       navigate("/admin/manage-products");
     } catch (error) {
@@ -61,11 +56,9 @@ function EditProduct() {
 
   return (
     <div className="edit-container">
-
       <h2 className="edit-title">Edit Product</h2>
 
       <form className="edit-form" onSubmit={handleUpdate}>
-
         <input
           type="text"
           name="name"
@@ -110,7 +103,7 @@ function EditProduct() {
           <option value="Pet Care">Pet Care</option>
         </select>
 
-        <textarea 
+        <textarea
           className="description-box"
           name="description"
           placeholder="Enter Product Description"
@@ -119,16 +112,17 @@ function EditProduct() {
         ></textarea>
 
         <input
-          type="file"
-          onChange={(e) => setFile(e.target.files[0])}
+          type="text"
+          name="imageUrl"
+          placeholder="Enter Image URL"
+          value={product.imageUrl}
+          onChange={handleChange}
         />
 
         <button type="submit" className="update-btn">
           Update Product
         </button>
-
       </form>
-
     </div>
   );
 }
