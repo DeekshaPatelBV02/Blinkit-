@@ -294,6 +294,16 @@ app.delete("/products/:id", async (req, res) => {
   }
 });
 
+/* GET CATEGORIES */
+app.get("/getCategories", async (req, res) => {
+  try {
+    const categories = await CategoryModel.find();
+    res.json(categories);
+  } catch (err) {
+    console.log("Get categories error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 
 /* SERVICES */
