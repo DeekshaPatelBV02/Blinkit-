@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendMail(to, subject, html) {
+async function sendMail(to, subject, html,attachments=[]) {
   try {
     console.log("Sending email to:", to);
 
