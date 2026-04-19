@@ -1,5 +1,7 @@
 const OrderModel = require("../models/order");
 const sendMail = require("./sendEmail");
+const generateInvoicePDF = require("./invoicePdf");
+const fs = require("fs");
 
 exports.placeOrder = async (req, res) => {
   try {
@@ -14,8 +16,19 @@ exports.placeOrder = async (req, res) => {
       return res.status(400).json({ message: "Products required" });
     }
 
+    // GST calculation
+    const subtotal = Number(orderData.totalPrice) || 0;
+    const gstRate = 5;
+    const gstAmount = (subtotal * gstRate) / 100;
+    const finalTotal = subtotal + gstAmount;
+
+    // total items calculation
+    const totalItems = orderData.products.reduce((sum, item) => {
+      return sum + Number(item.quantity || 0);
+    }, 0);
+
     const newOrder = new OrderModel({
-      ...orderData,
+      products: orderData.products,
       user: {
         fullName: orderData.user.fullName,
         email: orderData.user.email,
@@ -23,6 +36,12 @@ exports.placeOrder = async (req, res) => {
         address: orderData.user.address,
         payment: orderData.user.payment,
       },
+      subtotal: subtotal,
+      gstRate: gstRate,
+      gstAmount: gstAmount,
+      totalItems: totalItems,
+      totalPrice: finalTotal,
+      status: "Pending"
     });
 
     await newOrder.save();
@@ -31,20 +50,52 @@ exports.placeOrder = async (req, res) => {
       <h2>Order Confirmed</h2>
       <p>Hello ${orderData.user.fullName},</p>
       <p>Your order has been placed successfully.</p>
-      <p>Items: ${orderData.products.map((p) => p.name).join(", ")}</p>
-      <p>Total: ₹${orderData.totalPrice}</p>
+      <p><strong>Items:</strong> ${orderData.products.map((p) => p.name).join(", ")}</p>
+      <p><strong>Payment Method:</strong> ${orderData.user.payment}</p>
+      <p><strong>Subtotal:</strong> ₹${subtotal.toFixed(2)}</p>
+      <p><strong>GST (${gstRate}%):</strong> ₹${gstAmount.toFixed(2)}</p>
+      <p><strong>Total:</strong> ₹${finalTotal.toFixed(2)}</p>
+      <p>Your invoice PDF is attached with this email.</p>
     `;
 
     try {
-      await sendMail(orderData.user.email, "Order Placed Successfully", message);
-      console.log("Email sent successfully");
+      const pdfPath = await generateInvoicePDF(
+        {
+          ...orderData,
+          subtotal,
+          gstRate,
+          gstAmount,
+          totalPrice: finalTotal,
+          totalItems
+        },
+        newOrder._id.toString()
+      );
+
+      await sendMail(
+        orderData.user.email,
+        "Order Placed Successfully",
+        message,
+        [
+          {
+            filename: "invoice.pdf",
+            path: pdfPath,
+          },
+        ]
+      );
+
+      console.log("Email with PDF sent successfully");
+
+      if (fs.existsSync(pdfPath)) {
+        fs.unlinkSync(pdfPath);
+      }
     } catch (mailError) {
-      console.log("Email failed but order saved:", mailError.message);
+      console.log("Email/PDF failed but order saved:", mailError.message);
     }
 
     res.status(200).json({
       success: true,
       message: "Order placed successfully",
+      order: newOrder
     });
   } catch (error) {
     console.log("ERROR:", error);

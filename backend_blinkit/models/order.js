@@ -12,14 +12,36 @@ const orderSchema = new mongoose.Schema({
   ],
   user: {
     fullName: String,
-    email:String, 
+    email: String,
     number: String,
     address: String,
     payment: String
   },
-  totalItems: Number,
+
+  // ✅ NEW FIELDS FOR GST
+  subtotal: {
+    type: Number,
+    default: 0
+  },
+  gstRate: {
+    type: Number,
+    default: 5   // you can change later
+  },
+  gstAmount: {
+    type: Number,
+    default: 0
+  },
+
+  // ✅ FINAL TOTAL (with GST)
   totalPrice: Number,
-  status: { type: String, default: "Pending" },
+
+  totalItems: Number,
+
+  status: {
+    type: String,
+    default: "Pending"
+  },
+
   createdAt: {
     type: Date,
     default: Date.now

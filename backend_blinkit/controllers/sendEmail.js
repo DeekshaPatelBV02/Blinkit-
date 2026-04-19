@@ -19,6 +19,7 @@ async function sendMail(to, subject, html) {
       to,
       subject,
       html,
+      attachments,
     });
 
     console.log("Email sent:", info.response);
