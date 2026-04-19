@@ -1,47 +1,78 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../styles/userOrders.css";
 
 function UserOrders() {
-  const [orders, setOrders] = useState([]);
+    const mobile = localStorage.getItem("mobile");
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-  //  GET LOGGED USER
-  const user = JSON.parse(localStorage.getItem("user"));
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const userRes = await axios.get(
+                    `https://blinkit-2-yemv.onrender.com/profile/${mobile}`
+                );
 
-  // FETCH USER ORDERS
-  useEffect(() => {
-    if (user) {
-      fetch(`https://blinkit-2-yemv.onrender.com/my-orders/${user.mobile}`)
-        .then(res => res.json())
-        .then(data => setOrders(data.orders))
-        .catch(err => console.log(err));
+                const orderRes = await axios.get(
+                    `https://blinkit-2-yemv.onrender.com/my-orders/${userRes.data.email}`
+                );
+
+                setOrders(orderRes.data);
+            } catch (err) {
+                console.log("USER ORDERS ERROR:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (mobile) {
+            fetchOrders();
+        } else {
+            setLoading(false);
+        }
+    }, [mobile]);
+
+    if (!mobile) {
+        return <div className="orders-message">Please login first</div>;
     }
-  }, []);
 
-  return (
-    <div className="user-orders-container">
-      <h2>My Orders</h2>
+    if (loading) {
+        return <div className="orders-message">Loading orders...</div>;
+    }
 
-      {orders.length === 0 ? (
-        <p>No orders found</p>
-      ) : (
-        orders.map((order) => (
-          <div key={order._id} className="user-order-card">
-            <p><b>Total:</b> ₹{order.totalPrice}</p>
-            <p><b>Status:</b> {order.status}</p>
+    return (
+        <div className="orders-container">
+            <h2 className="orders-title">My Orders</h2>
 
-            <div className="user-order-products">
-                {order.products.map((p, i) => (
-                    <div key={i} className="user-order-product">
-                        <img src={p.imageUrl} alt={p.name} />
-                        <p>{p.name}</p>
-                     </div>
-                     ))}
-            </div>
-          </div>
-        ))
-      )}
-    </div>
-  );
+            {orders.length === 0 ? (
+                <p className="orders-message">No orders found</p>
+            ) : (
+                orders.map((order) => (
+                    <div className="order-card" key={order._id}>
+                        <h3 className="order-id">Order ID: {order._id}</h3>
+                        <p className="order-status">Status: {order.status}</p>
+
+                        {order.products.map((item, index) => (
+                            <div key={index} className="order-product">
+                                <img
+                                    src={item.imageUrl}
+                                    alt={item.name}
+                                    className="order-img"
+                                />
+                                <div className="order-details">
+                                    <p>{item.name}</p>
+                                    <p>₹{item.price}</p>
+                                    <p>Qty: {item.quantity}</p>
+                                </div>
+
+                            </div>
+                        ))}
+                    </div>
+                ))
+            )}
+        </div>
+    );
 }
 
 export default UserOrders;
