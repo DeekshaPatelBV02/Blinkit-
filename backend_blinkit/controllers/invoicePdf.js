@@ -36,7 +36,7 @@ function generateInvoicePDF(orderData, orderId) {
       orderData.products.forEach((item, index) => {
         const itemTotal = Number(item.price) * Number(item.quantity);
         doc.text(
-          `${index + 1}. ${item.name} - ₹${item.price} x ${item.quantity} = ₹${itemTotal}`
+          `${index + 1}. ${item.name} - Rs.${item.price} x ${item.quantity} = Rs.${itemTotal}`
         );
       });
 
@@ -44,7 +44,7 @@ function generateInvoicePDF(orderData, orderId) {
       doc.text(`Total Items: ${orderData.totalItems}`);
       doc.text(`Subtotal: Rs.${orderData.subtotal}`);
       doc.text(`GST (${orderData.gstRate}%): Rs.${orderData.gstAmount}`);
-      doc.text(`Total Price: ₹${orderData.totalPrice}`);
+      doc.text(`Total Price: Rs.${orderData.totalPrice}`);
 
       doc.moveDown();
       doc.text("Thank you for your order!", { align: "center" });
