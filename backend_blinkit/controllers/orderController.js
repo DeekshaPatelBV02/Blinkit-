@@ -35,11 +35,16 @@ exports.placeOrder = async (req, res) => {
       <p>Total: ₹${orderData.totalPrice}</p>
     `;
 
-    await sendMail(orderData.user.email, "Order Placed Successfully", message);
+    try {
+      await sendMail(orderData.user.email, "Order Placed Successfully", message);
+      console.log("Email sent successfully");
+    } catch (mailError) {
+      console.log("Email failed but order saved:", mailError.message);
+    }
 
     res.status(200).json({
       success: true,
-      message: "Order placed & email sent",
+      message: "Order placed successfully",
     });
   } catch (error) {
     console.log("ERROR:", error);
