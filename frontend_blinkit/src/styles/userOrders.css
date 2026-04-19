@@ -1,0 +1,47 @@
+.orders-container {
+  padding-top: 100px;
+  background: #f8f8f8;
+  min-height: 100vh;
+}
+
+.orders-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.orders-message {
+  text-align: center;
+  font-size: 16px;
+}
+
+.order-card {
+  width: 80%;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+}
+
+.order-id {
+  font-size: 18px;
+}
+
+.order-status {
+  margin-bottom: 10px;
+}
+
+.order-product {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.order-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.order-details {
+  font-size: 14px;
+}

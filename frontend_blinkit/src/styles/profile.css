@@ -1,0 +1,54 @@
+.profile-container {
+  padding-top: 100px;
+  text-align: center;
+  background: #f8f8f8;
+  min-height: 100vh;
+}
+
+.profile-title {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.profile-card {
+  width: 350px;
+  margin: auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+}
+
+.profile-item {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.profile-item span {
+  font-weight: bold;
+}
+
+.profile-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  background: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.profile-message {
+  text-align: center;
+  margin-top: 100px;
+  font-size: 18px;
+}

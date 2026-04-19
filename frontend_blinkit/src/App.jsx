@@ -15,6 +15,8 @@ import Orders from "./pages/Orders";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Cart from "./pages/cart";
 import Checkout from "./pages/Checkout";
+import Profile from "./pages/Profile";
+import UserOrders from "./pages/UserOrders";
 
 
 function App() {
@@ -32,6 +34,9 @@ const [products, setProducts] = useState([]);
       <Route path="/signup" element={<AddUsers />} />
       <Route path="/cart" element={<Cart/>}/>
       <Route path="/checkout" element={<Checkout/>}/>
+
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/my-orders" element={<UserOrders />} />
       <Route path="/products/:category" element={<ProductsPage/>} />
       <Route path="/product/:id"element={<SingleProduct/>}/>
       
