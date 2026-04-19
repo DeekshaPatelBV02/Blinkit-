@@ -5,7 +5,7 @@ import "../styles/userOrders.css";
 function UserOrders() {
   const mobile = localStorage.getItem("mobile");
   const [orders, setOrders] = useState([]);
-  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -14,23 +14,31 @@ function UserOrders() {
           `https://blinkit-2-yemv.onrender.com/profile/${mobile}`
         );
 
-        setUser(userRes.data);
-
         const orderRes = await axios.get(
           `https://blinkit-2-yemv.onrender.com/my-orders/${userRes.data.email}`
         );
 
         setOrders(orderRes.data);
       } catch (err) {
-        console.log(err);
+        console.log("USER ORDERS ERROR:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (mobile) fetchOrders();
+    if (mobile) {
+      fetchOrders();
+    } else {
+      setLoading(false);
+    }
   }, [mobile]);
 
   if (!mobile) {
     return <div className="orders-message">Please login first</div>;
+  }
+
+  if (loading) {
+    return <div className="orders-message">Loading orders...</div>;
   }
 
   return (
@@ -48,7 +56,12 @@ function UserOrders() {
             {order.products.map((item, index) => (
               <div key={index} className="order-product">
                 <img
-                  src={`https://blinkit-2-yemv.onrender.com/images/${item.file}`}
+                  src={
+                    item.imageUrl
+                      ? item.imageUrl
+                      : `https://blinkit-2-yemv.onrender.com/images/${item.file}`
+                  }
+                  alt={item.name}
                   className="order-img"
                 />
                 <div className="order-details">

@@ -421,6 +421,42 @@ app.post("/verify-payment", (req, res) => {
   }
 });
 
+app.get("/profile/:mobile", async (req, res) => {
+  try {
+    const user = await RegisterModel.findOne({
+      phone: req.params.mobile
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      name: user.name,
+      email: user.email,
+      phone: user.phone
+    });
+
+  } catch (err) {
+    console.log("PROFILE ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/my-orders/:email", async (req, res) => {
+  try {
+    const orders = await OrderModel.find({
+      "user.email": req.params.email
+    }).sort({ createdAt: -1 });
+
+    res.json(orders);
+
+  } catch (err) {
+    console.log("MY ORDERS ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 /* SERVER */
 const PORT = process.env.PORT || 3001;
 
