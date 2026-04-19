@@ -1,47 +1,50 @@
-.orders-container {
-  padding-top: 100px;
-  background: #f8f8f8;
-  min-height: 100vh;
+.user-orders-container {
+  padding: 30px;
+  background-color: #f9f9f9;
+  min-height: 80vh;
 }
 
-.orders-title {
+.user-orders-container h2 {
   text-align: center;
   margin-bottom: 20px;
 }
 
-.orders-message {
-  text-align: center;
-  font-size: 16px;
-}
-
-.order-card {
-  width: 80%;
-  margin: 20px auto;
-  padding: 20px;
+.user-order-card {
   background: white;
-  border-radius: 10px;
+  padding: 15px;
+  margin: 15px auto;
+  width: 350px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }
 
-.order-id {
-  font-size: 18px;
+.user-order-card p {
+  margin: 5px 0;
 }
 
-.order-status {
-  margin-bottom: 10px;
+.user-cancel-button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.order-product {
+.user-order-products {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   margin-top: 10px;
 }
 
-.order-img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
+.user-order-product {
+  text-align: center;
 }
 
-.order-details {
-  font-size: 14px;
+.user-order-product img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 5px;
 }
