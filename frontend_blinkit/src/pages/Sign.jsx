@@ -42,6 +42,7 @@ function Sign() {
       console.log("VERIFY RESPONSE:", res.data);
 
       if (res.data.success) {
+        localStorage.setItem("mobile", mobile);
         alert("Login successful");
         navigate("/");
       } else {

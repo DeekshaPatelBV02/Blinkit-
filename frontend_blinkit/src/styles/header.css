@@ -87,6 +87,27 @@
   font-size: 18px;
 }
 
+.nav-login a {
+  text-decoration: none;
+  color: black;
+  font-size: 18px;
+}
+
+.nav-login a:hover {
+  color: #0c831f;
+}
+
+.account-text {
+  cursor: pointer;
+  font-size: 18px;
+  color: black;
+  font-weight: normal;
+}
+
+.account-text:hover {
+  color: #0c831f;
+}
+
 .nav-cart {
   background-color: #f8f8f8;
   border-radius: 4px;
@@ -108,7 +129,6 @@
 }
 
 .cart-count {
- 
   color: black;
   font-size: 12px;
   font-weight: bold;

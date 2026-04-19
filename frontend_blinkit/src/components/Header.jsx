@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/header.css";
 import { useContext } from "react";
 import { CartContext } from "../Features/ContextProvider";
@@ -6,6 +6,14 @@ import { totalItem } from "../Features/CartReducer";
 
 function Header() {
   const { cart = [] } = useContext(CartContext);
+  const navigate = useNavigate();
+
+  // check login using mobile
+  const mobile = localStorage.getItem("mobile");
+
+  const handleAccountClick = () => {
+    navigate("/profile");
+  };
 
   return (
     <div className="navbar">
@@ -25,10 +33,18 @@ function Header() {
         <input placeholder="Search for groceries, fruits, snacks..." />
       </div>
 
+      {/* LOGIN / ACCOUNT */}
       <div className="nav-login">
-        <Link to="/login">Login</Link>
+        {!mobile ? (
+          <Link to="/login">Login</Link>
+        ) : (
+          <span className="account-text" onClick={handleAccountClick}>
+            Account
+          </span>
+        )}
       </div>
 
+      {/* CART */}
       <div className="nav-cart">
         <Link to="/cart" className="cart-link">
           <i className="fa-solid fa-cart-arrow-down"></i>
