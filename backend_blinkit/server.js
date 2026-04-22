@@ -465,41 +465,68 @@ app.get("/admin/all-analytics", async (req, res) => {
   try {
     const orders = await OrderModel.find();
 
-    let dateMap = {};
-    let monthMap = {};
-    let yearMap = {};
+    const result = [];
 
-    orders.forEach((o) => {
-      const d = new Date(o.createdAt);
+    orders.forEach((order) => {
+      const d = new Date(order.createdAt);
 
-      const date = d.toLocaleDateString();
-      const month = d.getMonth() + 1;
-      const year = d.getFullYear();
+      const dayLabel = d.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+      });
 
-      dateMap[date] = (dateMap[date] || 0) + 1;
-      monthMap[month] = (monthMap[month] || 0) + 1;
-      yearMap[year] = (yearMap[year] || 0) + 1;
+      const monthLabel = d.toLocaleDateString("en-IN", {
+        month: "short",
+        year: "numeric",
+      });
+
+      const yearLabel = d.getFullYear().toString();
+
+      let existing = result.find((item) => item.label === dayLabel);
+
+      if (!existing) {
+        existing = {
+          label: dayLabel,
+          dateOrders: 0,
+          monthOrders: 0,
+          yearOrders: 0,
+          monthLabel,
+          yearLabel,
+        };
+        result.push(existing);
+      }
+
+      existing.dateOrders += 1;
     });
 
-    const result = Object.keys(dateMap).map((date) => {
-      const d = new Date(date);
-      const month = d.getMonth() + 1;
-      const year = d.getFullYear();
+    result.forEach((item) => {
+      const sameMonthCount = orders.filter((order) => {
+        const d = new Date(order.createdAt);
+        const month = d.toLocaleDateString("en-IN", {
+          month: "short",
+          year: "numeric",
+        });
+        return month === item.monthLabel;
+      }).length;
 
-      return {
-        date,
-        dateOrders: dateMap[date],
-        monthOrders: monthMap[month] || 0,
-        yearOrders: yearMap[year] || 0
-      };
+      const sameYearCount = orders.filter((order) => {
+        const d = new Date(order.createdAt);
+        return d.getFullYear().toString() === item.yearLabel;
+      }).length;
+
+      item.monthOrders = sameMonthCount;
+      item.yearOrders = sameYearCount;
+
+      delete item.monthLabel;
+      delete item.yearLabel;
     });
 
     res.json(result);
   } catch (err) {
+    console.log("All analytics error:", err);
     res.status(500).json({ error: err.message });
   }
 });
-
 /* SERVER */
 const PORT = process.env.PORT || 3001;
 
