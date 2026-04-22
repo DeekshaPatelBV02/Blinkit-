@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   ResponsiveContainer,
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -11,33 +11,33 @@ import {
   Legend
 } from "recharts";
 
-function DateChart() {
+function YearChart() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     axios
-      .get("https://blinkit-2-yemv.onrender.com/admin/orders-datewise")
+      .get("https://blinkit-2-yemv.onrender.com/admin/orders-yearwise")
       .then((res) => setData(res.data))
-      .catch((err) => console.log("Date wise error:", err));
+      .catch((err) => console.log("Year wise error:", err));
   }, []);
 
   return (
     <div className="chart-page">
-      <h2>Date Wise Orders</h2>
+      <h2>Year Wise Orders</h2>
       <div className="chart-box">
         <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={data}>
+          <AreaChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="label" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="dateOrders" stroke="#2563eb" strokeWidth={3} />
-          </LineChart>
+            <Area type="monotone" dataKey="yearOrders" stroke="#dc2626" fill="#fca5a5" />
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>
   );
 }
 
-export default DateChart;
+export default YearChart;

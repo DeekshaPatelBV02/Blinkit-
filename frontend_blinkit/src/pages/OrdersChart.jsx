@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   ResponsiveContainer,
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -11,33 +11,33 @@ import {
   Legend
 } from "recharts";
 
-function DateChart() {
+function OrdersChart() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     axios
-      .get("https://blinkit-2-yemv.onrender.com/admin/orders-datewise")
+      .get("https://blinkit-2-yemv.onrender.com/admin/orders-count-chart")
       .then((res) => setData(res.data))
-      .catch((err) => console.log("Date wise error:", err));
+      .catch((err) => console.log("Orders chart error:", err));
   }, []);
 
   return (
     <div className="chart-page">
-      <h2>Date Wise Orders</h2>
+      <h2>Number of Orders</h2>
       <div className="chart-box">
         <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={data}>
+          <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="label" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="dateOrders" stroke="#2563eb" strokeWidth={3} />
-          </LineChart>
+            <Bar dataKey="orders" fill="#0f766e" />
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </div>
   );
 }
 
-export default DateChart;
+export default OrdersChart;

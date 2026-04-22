@@ -11,19 +11,19 @@ import {
   Legend
 } from "recharts";
 
-function DateChart() {
+function SignupChart() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     axios
-      .get("https://blinkit-2-yemv.onrender.com/admin/orders-datewise")
+      .get("https://blinkit-2-yemv.onrender.com/admin/signup-wise")
       .then((res) => setData(res.data))
-      .catch((err) => console.log("Date wise error:", err));
+      .catch((err) => console.log("Signup chart error:", err));
   }, []);
 
   return (
     <div className="chart-page">
-      <h2>Date Wise Orders</h2>
+      <h2>Signup Count</h2>
       <div className="chart-box">
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={data}>
@@ -32,7 +32,7 @@ function DateChart() {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="dateOrders" stroke="#2563eb" strokeWidth={3} />
+            <Line type="monotone" dataKey="signups" stroke="#7c3aed" strokeWidth={3} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -40,4 +40,4 @@ function DateChart() {
   );
 }
 
-export default DateChart;
+export default SignupChart;
