@@ -461,69 +461,149 @@ app.get("/my-orders/:email", async (req, res) => {
   }
 });
 
-app.get("/admin/all-analytics", async (req, res) => {
+app.get("/admin/orders-datewise", async (req, res) => {
   try {
-    const orders = await OrderModel.find();
+    const data = await OrderModel.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+          },
+          orders: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
 
-    const result = [];
-
-    orders.forEach((order) => {
-      const d = new Date(order.createdAt);
-
-      const dayLabel = d.toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-      });
-
-      const monthLabel = d.toLocaleDateString("en-IN", {
-        month: "short",
-        year: "numeric",
-      });
-
-      const yearLabel = d.getFullYear().toString();
-
-      let existing = result.find((item) => item.label === dayLabel);
-
-      if (!existing) {
-        existing = {
-          label: dayLabel,
-          dateOrders: 0,
-          monthOrders: 0,
-          yearOrders: 0,
-          monthLabel,
-          yearLabel,
-        };
-        result.push(existing);
-      }
-
-      existing.dateOrders += 1;
-    });
-
-    result.forEach((item) => {
-      const sameMonthCount = orders.filter((order) => {
-        const d = new Date(order.createdAt);
-        const month = d.toLocaleDateString("en-IN", {
-          month: "short",
-          year: "numeric",
-        });
-        return month === item.monthLabel;
-      }).length;
-
-      const sameYearCount = orders.filter((order) => {
-        const d = new Date(order.createdAt);
-        return d.getFullYear().toString() === item.yearLabel;
-      }).length;
-
-      item.monthOrders = sameMonthCount;
-      item.yearOrders = sameYearCount;
-
-      delete item.monthLabel;
-      delete item.yearLabel;
-    });
-
-    res.json(result);
+    res.json(
+      data.map((item) => ({
+        label: item._id,
+        dateOrders: item.orders
+      }))
+    );
   } catch (err) {
-    console.log("All analytics error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/admin/orders-monthwise", async (req, res) => {
+  try {
+    const data = await OrderModel.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" }
+          },
+          orders: { $sum: 1 }
+        }
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1 } }
+    ]);
+
+    res.json(
+      data.map((item) => ({
+        label: `${item._id.year}-${String(item._id.month).padStart(2, "0")}`,
+        monthOrders: item.orders
+      }))
+    );
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/admin/orders-yearwise", async (req, res) => {
+  try {
+    const data = await OrderModel.aggregate([
+      {
+        $group: {
+          _id: { $year: "$createdAt" },
+          orders: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    res.json(
+      data.map((item) => ({
+        label: String(item._id),
+        yearOrders: item.orders
+      }))
+    );
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/admin/payment-wise", async (req, res) => {
+  try {
+    const data = await OrderModel.aggregate([
+      {
+        $group: {
+          _id: "$user.payment",
+          value: { $sum: 1 }
+        }
+      }
+    ]);
+
+    res.json(
+      data.map((item) => ({
+        name: item._id || "Unknown",
+        value: item.value
+      }))
+    );
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/admin/signup-wise", async (req, res) => {
+  try {
+    const data = await RegisterModel.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+          },
+          signups: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    res.json(
+      data.map((item) => ({
+        label: item._id,
+        signups: item.signups
+      }))
+    );
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+app.get("/admin/orders-count-chart", async (req, res) => {
+  try {
+    const data = await OrderModel.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+          },
+          orders: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    res.json(
+      data.map((item) => ({
+        label: item._id,
+        orders: item.orders
+      }))
+    );
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
