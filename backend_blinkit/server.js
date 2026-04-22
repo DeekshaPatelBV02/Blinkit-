@@ -445,9 +445,13 @@ app.get("/profile/:mobile", async (req, res) => {
 
 app.get("/my-orders/:email", async (req, res) => {
   try {
+    if (!req.params.email) {
+      return res.status(400).json({ message: "Email required" });
+    }
+
     const orders = await OrderModel.find({
       "user.email": req.params.email
-    }).sort({ createdAt: -1 });
+    });
 
     res.json(orders);
 
