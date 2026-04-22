@@ -12,6 +12,7 @@ function AdminDashboard(){
 
             <button onClick={()=>navigate("/admin/manage-services")}>Manage Services</button>
             <button onClick={()=>navigate("/admin/orders")}>Manage User Orders</button>
+            <button onClick={()=>navigate("/admin/view-analytics")}>View Analytics</button>
         </div>
        
     );

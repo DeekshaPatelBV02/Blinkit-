@@ -10,6 +10,7 @@ import ManageUsers from "./ManageUsers";
 import ManageServices from "./ManageServices";
 import CreateProduct from "./CreateProduct";
 import AdminManageOrders from "./AdminManageOrders";
+import Sidebar from "./ViewAnalytics.jsx";
 
 
 function AdminRoutes({ products, setProducts }) {
@@ -40,6 +41,7 @@ function AdminRoutes({ products, setProducts }) {
       <Route path="manage-services"element={<ManageServices/>}/>
       <Route path="create-product"element={<CreateProduct/>}/>
       <Route path="orders"element={<AdminManageOrders/>} />
+      <Route path="view-analytics" elemnt={<ViewAnalytics/>}/>
 
       
     </Routes>
