@@ -1,26 +1,23 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend
-} from "recharts";
-
+'use client';
+import{
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
+}from 'recharts';
 function DateChart() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     axios
-      .get("https://blinkit-2-yemv.onrender.com/admin/orders-datewise")
+      .get("https://blinkit-2-yemv.onrender.com/admin/date-wise")
       .then((res) => setData(res.data))
-      .catch((err) => console.log("Date wise error:", err));
+      .catch((err) => console.log("Date chart error:", err));
   }, []);
-
   return (
     <div className="chart-page">
       <h2>Date Wise Orders</h2>
