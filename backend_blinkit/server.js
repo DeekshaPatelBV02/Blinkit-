@@ -477,7 +477,7 @@ const groupByDate = async (model, format) => {
 
 
 
-app.get("/admin/orders-datewise", async (req, res) => {
+app.get("/admin/date-wise", async (req, res) => {
   try {
     const data = await groupByDate(OrderModel, "%Y-%m-%d");
 
