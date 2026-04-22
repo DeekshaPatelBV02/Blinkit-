@@ -473,7 +473,7 @@ app.get("/admin/all-analytics", async (req, res) => {
       const d = new Date(o.createdAt);
 
       const date = d.toLocaleDateString();
-      const month = d.getMonth() + 1; 
+      const month = d.getMonth() + 1;
       const year = d.getFullYear();
 
       dateMap[date] = (dateMap[date] || 0) + 1;
@@ -481,16 +481,20 @@ app.get("/admin/all-analytics", async (req, res) => {
       yearMap[year] = (yearMap[year] || 0) + 1;
     });
 
-    
-    const result = Object.keys(dateMap).map((date, index) => ({
-      date,
-      dateOrders: dateMap[date],
-      monthOrders: Object.values(monthMap)[index] || 0,
-      yearOrders: Object.values(yearMap)[index] || 0
-    }));
+    const result = Object.keys(dateMap).map((date) => {
+      const d = new Date(date);
+      const month = d.getMonth() + 1;
+      const year = d.getFullYear();
+
+      return {
+        date,
+        dateOrders: dateMap[date],
+        monthOrders: monthMap[month] || 0,
+        yearOrders: yearMap[year] || 0
+      };
+    });
 
     res.json(result);
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
