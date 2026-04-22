@@ -461,23 +461,36 @@ app.get("/my-orders/:email", async (req, res) => {
   }
 });
 
-app.get("/admin/date-orders", async (req, res) => {
+app.get("/admin/all-analytics", async (req, res) => {
   try {
     const orders = await OrderModel.find();
 
-    let result = {};
+    let dateMap = {};
+    let monthMap = {};
+    let yearMap = {};
 
-    orders.forEach((order) => {
-      const date = new Date(order.createdAt).toLocaleDateString();
-      result[date] = (result[date] || 0) + 1;
+    orders.forEach((o) => {
+      const d = new Date(o.createdAt);
+
+      const date = d.toLocaleDateString();
+      const month = d.getMonth() + 1; 
+      const year = d.getFullYear();
+
+      dateMap[date] = (dateMap[date] || 0) + 1;
+      monthMap[month] = (monthMap[month] || 0) + 1;
+      yearMap[year] = (yearMap[year] || 0) + 1;
     });
 
-    const finalData = Object.keys(result).map((d) => ({
-      date: d,
-      orders: result[d]
+    
+    const result = Object.keys(dateMap).map((date, index) => ({
+      date,
+      dateOrders: dateMap[date],
+      monthOrders: Object.values(monthMap)[index] || 0,
+      yearOrders: Object.values(yearMap)[index] || 0
     }));
 
-    res.json(finalData);
+    res.json(result);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
