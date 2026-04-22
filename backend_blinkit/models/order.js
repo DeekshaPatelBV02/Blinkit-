@@ -18,21 +18,21 @@ const orderSchema = new mongoose.Schema({
     payment: String
   },
 
-  // ✅ NEW FIELDS FOR GST
+  
   subtotal: {
     type: Number,
     default: 0
   },
   gstRate: {
     type: Number,
-    default: 5   // you can change later
+    default: 5   
   },
   gstAmount: {
     type: Number,
     default: 0
   },
 
-  // ✅ FINAL TOTAL (with GST)
+  
   totalPrice: Number,
 
   totalItems: Number,

@@ -461,6 +461,28 @@ app.get("/my-orders/:email", async (req, res) => {
   }
 });
 
+app.get("/admin/date-orders", async (req, res) => {
+  try {
+    const orders = await OrderModel.find();
+
+    let result = {};
+
+    orders.forEach((order) => {
+      const date = new Date(order.createdAt).toLocaleDateString();
+      result[date] = (result[date] || 0) + 1;
+    });
+
+    const finalData = Object.keys(result).map((d) => ({
+      date: d,
+      orders: result[d]
+    }));
+
+    res.json(finalData);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 /* SERVER */
 const PORT = process.env.PORT || 3001;
 
