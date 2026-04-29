@@ -14,40 +14,118 @@ function generateInvoicePDF(orderData, orderId) {
       const fileName = `invoice_${orderId}_${Date.now()}.pdf`;
       const filePath = path.join(invoicesDir, fileName);
 
-      const doc = new PDFDocument({ margin: 50 });
+      const doc = new PDFDocument({ margin: 40 });
       const stream = fs.createWriteStream(filePath);
 
       doc.pipe(stream);
 
-      doc.fontSize(20).text("ORDER INVOICE", { align: "center" });
+      // Title
+      doc.fontSize(22).text("ORDER INVOICE", { align: "center" });
       doc.moveDown();
 
-      doc.fontSize(12).text(`Order ID: ${orderId}`);
+      // Customer Details
+      doc.fontSize(13).text("Customer Details", { underline: true });
+      doc.moveDown(0.5);
+
+      doc.fontSize(11);
+      doc.text(`Order ID: ${orderId}`);
       doc.text(`Customer Name: ${orderData.user.fullName}`);
       doc.text(`Email: ${orderData.user.email}`);
       doc.text(`Phone: ${orderData.user.number}`);
       doc.text(`Address: ${orderData.user.address}`);
       doc.text(`Payment Method: ${orderData.user.payment}`);
+
       doc.moveDown();
 
-      doc.fontSize(14).text("Products");
+      // Table Header
+      doc.fontSize(13).text("Product Details", { underline: true });
       doc.moveDown(0.5);
+
+      const tableTop = doc.y;
+      const itemX = 40;
+      const nameX = 80;
+      const priceX = 280;
+      const qtyX = 370;
+      const totalX = 450;
+
+      doc.fontSize(11).font("Helvetica-Bold");
+
+      doc.text("No", itemX, tableTop);
+      doc.text("Product", nameX, tableTop);
+      doc.text("Price", priceX, tableTop);
+      doc.text("Qty", qtyX, tableTop);
+      doc.text("Total", totalX, tableTop);
+
+      doc.moveTo(40, tableTop + 18)
+        .lineTo(550, tableTop + 18)
+        .stroke();
+
+      doc.font("Helvetica");
+
+      let y = tableTop + 30;
 
       orderData.products.forEach((item, index) => {
         const itemTotal = Number(item.price) * Number(item.quantity);
-        doc.text(
-          `${index + 1}. ${item.name} - Rs.${item.price} x ${item.quantity} = Rs.${itemTotal}`
-        );
+
+        doc.text(index + 1, itemX, y);
+        doc.text(item.name, nameX, y, { width: 180 });
+        doc.text(`Rs.${item.price}`, priceX, y);
+        doc.text(item.quantity, qtyX, y);
+        doc.text(`Rs.${itemTotal}`, totalX, y);
+
+        y += 25;
       });
 
-      doc.moveDown();
-      doc.text(`Total Items: ${orderData.totalItems}`);
-      doc.text(`Subtotal: Rs.${orderData.subtotal}`);
-      doc.text(`GST (${orderData.gstRate}%): Rs.${orderData.gstAmount}`);
-      doc.text(`Total Price: Rs.${orderData.totalPrice}`);
+      doc.moveTo(40, y)
+        .lineTo(550, y)
+        .stroke();
 
-      doc.moveDown();
-      doc.text("Thank you for your order!", { align: "center" });
+      doc.moveDown(2);
+
+      // GST Calculation
+      const subtotal = Number(orderData.subtotal);
+      const gstRate = Number(orderData.gstRate); // example 5
+      const gstAmount = Number(orderData.gstAmount);
+
+      const cgstRate = gstRate / 2;
+      const sgstRate = gstRate / 2;
+
+      const cgstAmount = gstAmount / 2;
+      const sgstAmount = gstAmount / 2;
+
+      // Summary Table
+      let summaryY = y + 25;
+
+      doc.fontSize(13).font("Helvetica-Bold").text("Bill Summary", 350, summaryY);
+      summaryY += 25;
+
+      doc.fontSize(11).font("Helvetica");
+
+      doc.text("Total Items:", 350, summaryY);
+      doc.text(orderData.totalItems, 470, summaryY);
+      summaryY += 20;
+
+      doc.text("Subtotal:", 350, summaryY);
+      doc.text(`Rs.${subtotal}`, 470, summaryY);
+      summaryY += 20;
+
+      doc.text(`CGST (${cgstRate}%):`, 350, summaryY);
+      doc.text(`Rs.${cgstAmount}`, 470, summaryY);
+      summaryY += 20;
+
+      doc.text(`SGST (${sgstRate}%):`, 350, summaryY);
+      doc.text(`Rs.${sgstAmount}`, 470, summaryY);
+      summaryY += 20;
+
+      doc.font("Helvetica-Bold");
+      doc.text("Total Price:", 350, summaryY);
+      doc.text(`Rs.${orderData.totalPrice}`, 470, summaryY);
+
+      doc.moveDown(4);
+
+      doc.fontSize(12)
+        .font("Helvetica-Bold")
+        .text("Thank you for your order!", { align: "center" });
 
       doc.end();
 
