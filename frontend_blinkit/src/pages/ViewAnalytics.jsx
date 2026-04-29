@@ -46,13 +46,13 @@ function ViewAnalytics() {
           </li>
 
           <li className="sidebar-list-item">
-            <Link to="signup">
+            <Link to="signupchart">
               <IoPeople className="icon" /> Signup count
             </Link>
           </li>
 
           <li className="sidebar-list-item">
-            <Link to="orders-chart">
+            <Link to="orderscount">
               <MdOutlineProductionQuantityLimits className="icon" /> Number of Orders
             </Link>
           </li>
