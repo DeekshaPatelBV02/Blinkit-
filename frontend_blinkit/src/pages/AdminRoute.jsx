@@ -13,6 +13,11 @@ import AdminManageOrders from "./AdminManageOrders";
 import ViewAnalytics from "./ViewAnalytics";
 
 import DateChart from "./DateChart";
+import SignupChart from "./SignupChart";
+import MonthChart from "./MonthChart";
+import PaymentCountChart from "./PaymentCountChart";
+import YearChart from "./YearChart";
+import OrdersChart from "./OrdersChart";
 
 
 function AdminRoutes({ products, setProducts }) {
@@ -48,6 +53,11 @@ function AdminRoutes({ products, setProducts }) {
       <Route path="view-analytics" element={<ViewAnalytics />}>
         <Route index element={<DateChart />} />
         <Route path="date" element={<DateChart />} />
+        <Route path ="signupchart" element={<SignupChart/>}/>
+        <Route path="month" element={<MonthChart />} />
+        <Route path="year" element={<YearChart />} />
+        <Route path="payment-count" element={<PaymentCountChart />} />
+        <Route path="orderscount" element={<OrdersChart />} />
      
       </Route>
     </Routes>

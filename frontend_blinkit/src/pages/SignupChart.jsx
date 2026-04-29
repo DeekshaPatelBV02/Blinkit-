@@ -15,7 +15,7 @@ function SignupChart(){
     const [data,setData]=useState([]);
 
     useEffect(()=>{
-        axios.get("https://blinkit-2-yemv.onrender.com/admin/signup-count")
+        axios.get("https://blinkit-2-yemv.onrender.com/admin/signup-wise")
         .then((res)=>setData(res.data))
         .catch((err)=>console.log("Signup Chart error:",err));
     },[]);
